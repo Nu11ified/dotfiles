@@ -8,6 +8,8 @@ brew "fd"
 brew "fzf"
 brew "bat"
 brew "eza"
+brew "starship"
+brew "zsh-autosuggestions"
 
 cask "ghostty"
 cask "font-jetbrains-mono-nerd-font"
