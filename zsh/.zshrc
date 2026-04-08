@@ -8,3 +8,5 @@ eval "$(starship init zsh)"
 source $ZSH/oh-my-zsh.sh
 source "$ZSH_CUSTOM/aliases.zsh"
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"

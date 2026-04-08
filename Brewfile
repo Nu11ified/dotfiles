@@ -13,3 +13,4 @@ brew "zsh-autosuggestions"
 
 cask "ghostty"
 cask "font-jetbrains-mono-nerd-font"
+cask "emacs-app"
