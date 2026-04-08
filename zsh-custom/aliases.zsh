@@ -1,0 +1,8 @@
+alias ll="ls -lah"
+alias la="ls -A"
+alias gs="git status"
+alias ga="git add"
+alias gc="git commit"
+alias gp="git push"
+alias v="vim"
+alias t="tmux"
