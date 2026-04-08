@@ -10,6 +10,7 @@ brew "bat"
 brew "eza"
 brew "starship"
 brew "zsh-autosuggestions"
+brew "television"
 
 cask "ghostty"
 cask "font-jetbrains-mono-nerd-font"

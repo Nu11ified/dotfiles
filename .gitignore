@@ -1,0 +1,30 @@
+*/auto-save-list
+auto-save-list/
+.DS_Store
+
+# Editor temp / backups
+*~
+*.swp
+*.swo
+\#*\#
+.\#*
+
+# Emacs
+**/auto-save-list/
+**/eln-cache/
+**/.cache/
+**/eshell/history
+**/eshell/lastdir
+**/recentf
+**/tramp
+
+# macOS misc
+._*
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+
+# IDEs
+.vscode/
+.idea/
