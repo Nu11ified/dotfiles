@@ -11,6 +11,7 @@ brew "eza"
 brew "starship"
 brew "zsh-autosuggestions"
 brew "television"
+brew "tldr"
 
 cask "ghostty"
 cask "font-jetbrains-mono-nerd-font"
