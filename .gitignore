@@ -28,3 +28,5 @@ auto-save-list/
 # IDEs
 .vscode/
 .idea/
+
+emacs/straight/
