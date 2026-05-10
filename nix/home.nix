@@ -17,7 +17,7 @@
 
   programs.git = {
     enable = true;
-    extraConfig = {
+    settings = {
       init.defaultBranch = "main";
       pull.rebase = false;
       push.autoSetupRemote = true;
@@ -40,7 +40,7 @@
       dots-install = "~/dotfiles/scripts/install";
       dots-update = "~/dotfiles/scripts/update";
     };
-    initExtra = ''
+    initContent = ''
       export ZSH="$HOME/dotfiles/oh-my-zsh"
       export ZSH_CUSTOM="$HOME/dotfiles/zsh/zsh-custom"
       export PATH="$HOME/.local/bin:$PATH"

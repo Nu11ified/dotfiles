@@ -5,6 +5,8 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  system.primaryUser = username;
+
   users.users.${username}.home = "/Users/${username}";
 
   environment.systemPackages = with pkgs; [
