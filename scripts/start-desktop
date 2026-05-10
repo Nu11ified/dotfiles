@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export PATH="/opt/homebrew/bin:/usr/local/bin:/run/current-system/sw/bin:/etc/profiles/per-user/$USER/bin:$PATH"
+
+defaults write NSGlobalDomain _HIHideMenuBar -bool true
+defaults write NSGlobalDomain AppleMenuBarVisibleInFullscreen -bool false
+defaults write NSGlobalDomain AppleInterfaceStyle -string Dark
+defaults write "Apple Global Domain" _HIHideMenuBar -bool true
+defaults write "Apple Global Domain" AppleMenuBarVisibleInFullscreen -bool false
+defaults write com.apple.universalaccess reduceTransparency -bool true
+killall SystemUIServer 2>/dev/null || true
+killall ControlCenter 2>/dev/null || true
+
+if command -v aerospace >/dev/null 2>&1; then
+  open -gj -a AeroSpace || true
+  sleep 1
+  aerospace reload-config || true
+  "$HOME/.config/aerospace/scripts/sync-app-workspaces" || true
+fi
+
+pkill -x spacebar 2>/dev/null || true
+pkill -x borders 2>/dev/null || true
+
+if command -v sketchybar >/dev/null 2>&1; then
+  if command -v brew >/dev/null 2>&1; then
+    brew services restart sketchybar >/tmp/sketchybar-service.log 2>&1 || true
+  fi
+  pkill -x sketchybar 2>/dev/null || true
+  nohup sketchybar >/tmp/sketchybar.log 2>&1 &
+fi
+
+if command -v borders >/dev/null 2>&1; then
+  if [ -x "$HOME/.config/borders/bordersrc" ]; then
+    nohup "$HOME/.config/borders/bordersrc" >/tmp/borders.log 2>&1 &
+  else
+    nohup borders active_color=0xfff5c2e7 inactive_color=0xff304462 width=5.0 hidpi=on style=round >/tmp/borders.log 2>&1 &
+  fi
+fi
+
+echo "Started AeroSpace, SketchyBar, and JankyBorders"

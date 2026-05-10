@@ -1,7 +1,7 @@
 # My Dotfiles
 
 Deterministic macOS setup using Nix flakes, nix-darwin, Home Manager, AeroSpace,
-Spacebar, zsh, and Emacs.
+SketchyBar, JankyBorders, zsh, and Emacs.
 
 ## First Install On A Mac
 
@@ -61,7 +61,7 @@ dots-update work
 
 ## Reloading Apps
 
-`dotfiles-update` reloads AeroSpace and restarts Spacebar automatically after
+`dotfiles-update` reloads AeroSpace and restarts SketchyBar automatically after
 applying the Nix config. Manual reloads are only needed when you are testing a
 bar/window-manager change without running a full update.
 
@@ -92,8 +92,9 @@ Inside Emacs, open it with `C-c ?`.
 | `Option-8` | `N` notes | manual workspace |
 | `Option-9` | `G` git/factory | automatic GitForge/Factory matching |
 
-Spacebar runs `~/.config/spacebar/scripts/aerospace-status` so the top bar shows
-the active AeroSpace workspace instead of relying on macOS Spaces.
+SketchyBar subscribes to an `aerospace_workspace_change` event triggered by
+AeroSpace's `exec-on-workspace-change` callback, so the top bar shows the active
+AeroSpace workspace instead of relying on macOS Spaces.
 
 ## Layout
 
@@ -102,6 +103,7 @@ the active AeroSpace workspace instead of relying on macOS Spaces.
 - `nix/home.nix`: user dotfiles, shell, Git, Emacs, app configs.
 - `config/aerospace/aerospace.toml`: tiling/window/workspace shortcuts.
 - `config/aerospace/scripts/open-workspace`: launch apps into named workspaces.
-- `config/spacebar/spacebarrc`: dark top bar.
-- `config/spacebar/scripts/aerospace-status`: workspace status for Spacebar.
+- `config/sketchybar/sketchybarrc`: dark top bar.
+- `config/sketchybar/plugins/aerospace.sh`: workspace status for SketchyBar.
+- `config/borders/bordersrc`: focused-window borders.
 - `emacs/init.el`: default-keybinding editor and Org notes setup.

@@ -34,20 +34,29 @@
     onActivation = {
       autoUpdate = true;
       upgrade = false;
-      cleanup = "zap";
+      cleanup = "none";
     };
     taps = [
+      "FelixKratz/formulae"
       "nikitabobko/tap"
-      "cmacrae/formulae"
     ];
     brews = [
+      "borders"
+      "git"
+      "sketchybar"
+      "starship"
       "zsh-autosuggestions"
-      "cmacrae/formulae/spacebar"
       "television"
     ];
     casks = [
+      "bruno"
+      "codex"
       "ghostty"
       "emacs-app"
+      "font-caskaydia-cove-nerd-font"
+      "font-fira-mono-nerd-font"
+      "font-iosevka-term-nerd-font"
+      "font-jetbrains-mono-nerd-font"
       "nikitabobko/tap/aerospace"
     ];
   };
@@ -57,9 +66,12 @@
     dock.mru-spaces = false;
     finder.AppleShowAllExtensions = true;
     finder.FXPreferredViewStyle = "Nlsv";
+    NSGlobalDomain.AppleInterfaceStyle = "Dark";
+    NSGlobalDomain._HIHideMenuBar = true;
     NSGlobalDomain.ApplePressAndHoldEnabled = false;
     NSGlobalDomain.KeyRepeat = 2;
     NSGlobalDomain.InitialKeyRepeat = 15;
+    universalaccess.reduceTransparency = true;
   };
 
   system.stateVersion = 6;

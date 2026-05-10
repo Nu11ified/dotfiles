@@ -41,17 +41,29 @@
       dots-update = "~/dotfiles/scripts/update";
     };
     initContent = ''
+      if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+        source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+      fi
+
+      if [ -e /etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh ]; then
+        source /etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh
+      fi
+
       export ZSH="$HOME/dotfiles/oh-my-zsh"
       export ZSH_CUSTOM="$HOME/dotfiles/zsh/zsh-custom"
-      export PATH="$HOME/.local/bin:$PATH"
+      export PATH="$HOME/.local/bin:/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin:$PATH"
 
       if [ -d "$ZSH" ]; then
-        plugins=(git starship)
+        plugins=(git)
         source "$ZSH/oh-my-zsh.sh"
       fi
 
       if [ -f "$ZSH_CUSTOM/aliases.zsh" ]; then
         source "$ZSH_CUSTOM/aliases.zsh"
+      fi
+
+      if command -v starship >/dev/null 2>&1; then
+        eval "$(starship init zsh)"
       fi
     '';
   };
@@ -68,12 +80,36 @@
     source = ../config/aerospace/scripts/open-workspace;
     executable = true;
   };
-  home.file.".config/spacebar/spacebarrc" = {
-    source = ../config/spacebar/spacebarrc;
+  home.file.".config/aerospace/scripts/sync-app-workspaces" = {
+    source = ../config/aerospace/scripts/sync-app-workspaces;
     executable = true;
   };
-  home.file.".config/spacebar/scripts/aerospace-status" = {
-    source = ../config/spacebar/scripts/aerospace-status;
+  home.file.".config/sketchybar/sketchybarrc" = {
+    source = ../config/sketchybar/sketchybarrc;
+    executable = true;
+  };
+  home.file.".config/sketchybar/plugins/aerospace.sh" = {
+    source = ../config/sketchybar/plugins/aerospace.sh;
+    executable = true;
+  };
+  home.file.".config/sketchybar/plugins/front_app.sh" = {
+    source = ../config/sketchybar/plugins/front_app.sh;
+    executable = true;
+  };
+  home.file.".config/sketchybar/plugins/wifi.sh" = {
+    source = ../config/sketchybar/plugins/wifi.sh;
+    executable = true;
+  };
+  home.file.".config/sketchybar/plugins/battery.sh" = {
+    source = ../config/sketchybar/plugins/battery.sh;
+    executable = true;
+  };
+  home.file.".config/sketchybar/plugins/load.sh" = {
+    source = ../config/sketchybar/plugins/load.sh;
+    executable = true;
+  };
+  home.file.".config/borders/bordersrc" = {
+    source = ../config/borders/bordersrc;
     executable = true;
   };
   home.file.".config/keyboard-shortcuts.md".source = ../docs/keyboard-shortcuts.md;
@@ -83,6 +119,10 @@
   };
   home.file.".local/bin/dotfiles-update" = {
     source = ../scripts/update;
+    executable = true;
+  };
+  home.file.".local/bin/dotfiles-start-desktop" = {
+    source = ../scripts/start-desktop;
     executable = true;
   };
   home.file.".local/bin/dotfiles-apply-latest" = {

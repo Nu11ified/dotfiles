@@ -26,10 +26,43 @@ run_darwin_switch() {
     fi
   fi
 
+  prepare_home_manager_targets
+
   if command -v darwin-rebuild >/dev/null 2>&1; then
     sudo -H env PATH="$PATH" darwin-rebuild switch --flake "$dotfiles_dir#$profile"
   else
     sudo -H env PATH="$PATH" nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake "$dotfiles_dir#$profile"
+  fi
+}
+
+prepare_home_manager_targets() {
+  local zshrc="$HOME/.zshrc"
+  local backup="$HOME/.zshrc.pre-home-manager"
+  local emacs_dir="$HOME/.emacs.d"
+  local emacs_backup="$HOME/.emacs.d.pre-home-manager"
+
+  if [ -L "$zshrc" ] && readlink "$zshrc" | grep -q '^/nix/store/'; then
+    return
+  fi
+
+  if [ -e "$zshrc" ] || [ -L "$zshrc" ]; then
+    if [ -e "$backup" ] || [ -L "$backup" ]; then
+      backup="$HOME/.zshrc.pre-home-manager.$(date +%Y%m%d%H%M%S)"
+    fi
+    mv "$zshrc" "$backup"
+    echo "Moved existing ~/.zshrc to $backup"
+  fi
+
+  if [ -L "$emacs_dir" ] && readlink "$emacs_dir" | grep -q '^/nix/store/'; then
+    return
+  fi
+
+  if [ -e "$emacs_dir" ] || [ -L "$emacs_dir" ]; then
+    if [ -e "$emacs_backup" ] || [ -L "$emacs_backup" ]; then
+      emacs_backup="$HOME/.emacs.d.pre-home-manager.$(date +%Y%m%d%H%M%S)"
+    fi
+    mv "$emacs_dir" "$emacs_backup"
+    echo "Moved existing ~/.emacs.d to $emacs_backup"
   fi
 }
 
@@ -56,8 +89,10 @@ if command -v aerospace >/dev/null 2>&1; then
   aerospace reload-config || true
 fi
 
-if command -v brew >/dev/null 2>&1 && brew services list 2>/dev/null | grep -q '^spacebar'; then
-  brew services restart spacebar || true
+if command -v brew >/dev/null 2>&1 && brew services list 2>/dev/null | grep -q '^sketchybar'; then
+  brew services restart sketchybar || true
 fi
+
+"$dotfiles_dir/scripts/start-desktop" || true
 
 echo "Updated dotfiles profile: $profile"

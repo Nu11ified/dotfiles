@@ -4,7 +4,14 @@
 start-at-login = true
 after-login-command = []
 after-startup-command = [
-  'exec-and-forget /bin/zsh -lc "$HOME/.config/spacebar/scripts/aerospace-status"',
+  'exec-and-forget /bin/zsh -lc "sketchybar --trigger aerospace_workspace_change FOCUSED=$(/opt/homebrew/bin/aerospace list-workspaces --focused 2>/dev/null || true)"',
+  'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/sync-app-workspaces"',
+]
+
+exec-on-workspace-change = [
+  '/bin/bash',
+  '-c',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE',
 ]
 
 enable-normalization-flatten-containers = true
@@ -15,12 +22,12 @@ default-root-container-layout = "tiles"
 default-root-container-orientation = "auto"
 
 [gaps]
-inner.horizontal = 8
-inner.vertical = 8
-outer.left = 8
-outer.bottom = 8
-outer.top = 8
-outer.right = 8
+inner.horizontal = 10
+inner.vertical = 10
+outer.left = 15
+outer.bottom = 15
+outer.top = 60
+outer.right = 15
 
 [workspace-to-monitor-force-assignment]
 W = "main" # web
@@ -39,6 +46,22 @@ run = ["move-node-to-workspace W"]
 
 [[on-window-detected]]
 if.app-id = "com.apple.Safari"
+run = ["move-node-to-workspace W"]
+
+[[on-window-detected]]
+if.app-id = "app.zen-browser.zen"
+run = ["move-node-to-workspace W"]
+
+[[on-window-detected]]
+if.app-name-regex-substring = "Zen"
+run = ["move-node-to-workspace W"]
+
+[[on-window-detected]]
+if.app-id = "net.imput.helium"
+run = ["move-node-to-workspace W"]
+
+[[on-window-detected]]
+if.app-name-regex-substring = "Helium"
 run = ["move-node-to-workspace W"]
 
 [[on-window-detected]]
@@ -104,14 +127,21 @@ run = ["move-node-to-workspace C"]
 [mode.main.binding]
 alt-slash = "layout tiles horizontal vertical"
 alt-comma = "layout accordion horizontal vertical"
+alt-backslash = "layout tiles horizontal vertical"
+alt-shift-v = "layout accordion tiles"
 
-alt-b = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace W \"Google Chrome\""'
+alt-b = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace W Zen"'
 alt-enter = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace T Ghostty"'
-alt-s = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace S Termius"'
+alt-u = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace S Termius"'
 alt-e = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace E Emacs"'
 alt-m = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace M Music"'
 alt-a = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace A Codex"'
 alt-c = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace C Cursor"'
+
+alt-q = "close --quit-if-last-window"
+alt-shift-q = 'exec-and-forget osascript -e "tell application \"System Events\" to keystroke \"q\" using command down"'
+alt-shift-m = "macos-native-minimize"
+alt-shift-d = 'exec-and-forget osascript -e "tell application \"System Events\" to keystroke \"h\" using command down"'
 
 alt-h = "focus left"
 alt-j = "focus down"
@@ -123,8 +153,15 @@ alt-shift-j = "move down"
 alt-shift-k = "move up"
 alt-shift-l = "move right"
 
+alt-ctrl-h = "join-with left"
+alt-ctrl-j = "join-with down"
+alt-ctrl-k = "join-with up"
+alt-ctrl-l = "join-with right"
+
 alt-minus = "resize smart -50"
 alt-equal = "resize smart +50"
+alt-shift-minus = "resize height -50"
+alt-shift-equal = "resize height +50"
 
 alt-1 = "workspace W"
 alt-2 = "workspace T"
@@ -150,9 +187,23 @@ alt-tab = "workspace-back-and-forth"
 alt-shift-tab = "move-workspace-to-monitor --wrap-around next"
 
 alt-f = "fullscreen"
+alt-s = "layout v_accordion"
 alt-shift-space = "layout floating tiling"
 alt-shift-r = "reload-config"
+alt-r = "mode resize"
 alt-shift-semicolon = "mode service"
+
+[mode.resize.binding]
+esc = "mode main"
+enter = "mode main"
+h = "resize width -50"
+j = "resize height +50"
+k = "resize height -50"
+l = "resize width +50"
+shift-h = "move left"
+shift-j = "move down"
+shift-k = "move up"
+shift-l = "move right"
 
 [mode.service.binding]
 esc = ["reload-config", "mode main"]

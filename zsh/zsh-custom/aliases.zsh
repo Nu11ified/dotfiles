@@ -11,3 +11,9 @@ alias dotfiles-install="$HOME/dotfiles/scripts/install"
 alias dotfiles-update="$HOME/dotfiles/scripts/update"
 alias dots-install="dotfiles-install"
 alias dots-update="dotfiles-update"
+alias rsa="$HOME/dotfiles/scripts/start-desktop"
+alias showsketchy="$HOME/dotfiles/scripts/start-desktop"
+alias showmac='pkill -x sketchybar 2>/dev/null; pkill -x borders 2>/dev/null; defaults write NSGlobalDomain _HIHideMenuBar -bool false; killall SystemUIServer 2>/dev/null; echo "macOS menu bar restored"'
+alias jankyon='pkill -x borders 2>/dev/null; borders active_color=0xffffffff inactive_color=0x00ffffff width=5.0 style=round hidpi=on >/tmp/borders.log 2>&1 &'
+alias jankyoff='pkill -x borders 2>/dev/null'
+alias as='cat ~/.config/keyboard-shortcuts.md'

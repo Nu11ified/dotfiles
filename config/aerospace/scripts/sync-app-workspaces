@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v aerospace >/dev/null 2>&1; then
+  exit 0
+fi
+
+aerospace list-windows --all --format '%{window-id}|%{app-bundle-id}' |
+  while IFS='|' read -r window_id bundle_id; do
+    case "$bundle_id" in
+      app.zen-browser.zen|net.imput.helium|com.google.Chrome|com.apple.Safari)
+        aerospace move-node-to-workspace --window-id "$window_id" W || true
+        ;;
+    esac
+  done

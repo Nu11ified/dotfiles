@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+
+CONFIG_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+
+sketchybar --bar \
+  position=top \
+  height=36 \
+  margin=8 \
+  y_offset=6 \
+  notch_width=260 \
+  notch_offset=0 \
+  corner_radius=12 \
+  color=0xee151515 \
+  border_color=0x00000000 \
+  border_width=0 \
+  shadow=on \
+  sticky=on \
+  topmost=window
+
+sketchybar --default \
+  updates=when_shown \
+  icon.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  icon.color=0xffffffff \
+  label.font="JetBrainsMono Nerd Font:Medium:12.0" \
+  label.color=0xffe8e8e8 \
+  background.height=24 \
+  background.corner_radius=8 \
+  background.color=0x00000000 \
+  padding_left=6 \
+  padding_right=6
+
+sketchybar --add event aerospace_workspace_change
+
+add_workspace() {
+  local item="$1"
+  local number="$2"
+  local icon="$3"
+  local position="$4"
+
+  sketchybar --add item "space.$item" "$position" \
+    --set "space.$item" \
+      icon="$number:$icon" \
+      label.drawing=off \
+      click_script="aerospace workspace $item" \
+      script="$PLUGIN_DIR/aerospace.sh $item" \
+      background.color=0x33222222 \
+      background.border_width=1 \
+      background.border_color=0x00333333 \
+    --subscribe "space.$item" aerospace_workspace_change
+}
+
+add_workspace W 1 "󰖟" left
+add_workspace T 2 "" left
+add_workspace S 3 "󰣀" left
+add_workspace E 4 "" left
+add_workspace M 5 "󰝚" left
+add_workspace A 6 "󰚩" left
+add_workspace C 7 "󰨞" left
+add_workspace N 8 "󰎚" left
+add_workspace G 9 "󰊢" left
+
+sketchybar --add item front_app left \
+  --set front_app \
+    icon="󰣇" \
+    label="..." \
+    label.width=110 \
+    scroll_texts=on \
+    script="$PLUGIN_DIR/front_app.sh" \
+    background.color=0x33222222 \
+  --subscribe front_app front_app_switched
+
+sketchybar --add item wifi right \
+  --set wifi \
+    icon="󰖩" \
+    update_freq=20 \
+    script="$PLUGIN_DIR/wifi.sh" \
+    background.color=0x00000000
+
+sketchybar --add item battery right \
+  --set battery \
+    icon="󰁹" \
+    update_freq=30 \
+    script="$PLUGIN_DIR/battery.sh" \
+    background.color=0x00000000
+
+sketchybar --add item load right \
+  --set load \
+    icon="󰓅" \
+    update_freq=10 \
+    script="$PLUGIN_DIR/load.sh" \
+    background.color=0x00000000
+
+sketchybar --add item clock right \
+  --set clock \
+    icon="󰥔" \
+    update_freq=30 \
+    script='sketchybar --set "$NAME" label="$(date "+%I:%M")"' \
+    background.color=0x00000000 \
+    icon.color=0xffffffff
+
+sketchybar --trigger aerospace_workspace_change FOCUSED="$(aerospace list-workspaces --focused 2>/dev/null || true)"
+sketchybar --update

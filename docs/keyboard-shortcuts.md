@@ -16,9 +16,9 @@
 | `Option-8` | Notes/research workspace |
 | `Option-9` | Git/factory workspace |
 | `Option-Shift-1..9` | Move window to matching workspace |
-| `Option-b` | Open browser in Web |
+| `Option-b` | Open Zen in Web |
 | `Option-Enter` | Open Ghostty in Terminal |
-| `Option-s` | Open Termius in SSH |
+| `Option-u` | Open Termius in SSH |
 | `Option-e` | Open Emacs |
 | `Option-m` | Open Music |
 | `Option-a` | Open Codex agent workspace |
@@ -26,9 +26,18 @@
 | `Option-Tab` | Toggle previous workspace |
 | `Option-/` | Toggle horizontal/vertical tiles |
 | `Option-,` | Toggle accordion layout |
+| `Option-\\` | Toggle tile orientation |
+| `Option-Shift-v` | Toggle accordion/tiles |
+| `Option-Control-h/j/k/l` | Join focused window with neighbor |
+| `Option-s` | Vertical accordion layout |
 | `Option-f` | Fullscreen focused window |
 | `Option-Shift-Space` | Toggle floating/tiling |
+| `Option-q` | Close focused window |
+| `Option-Shift-q` | Quit focused app |
+| `Option-Shift-m` | Minimize focused window |
+| `Option-Shift-d` | Hide focused app |
 | `Option--` / `Option-=` | Resize focused window |
+| `Option-r` | Resize mode |
 | `Option-Shift-r` | Reload AeroSpace config |
 | `Option-Shift-;` | Enter service mode |
 
