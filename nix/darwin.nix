@@ -1,7 +1,7 @@
 { pkgs, username, ... }:
 
 {
-  nix.settings.experimental-features = "nix-command flakes";
+  nix.enable = false;
 
   nixpkgs.config.allowUnfree = true;
 
