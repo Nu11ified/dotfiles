@@ -27,9 +27,9 @@ run_darwin_switch() {
   fi
 
   if command -v darwin-rebuild >/dev/null 2>&1; then
-    sudo env PATH="$PATH" darwin-rebuild switch --flake "$dotfiles_dir#$profile"
+    sudo -H env PATH="$PATH" darwin-rebuild switch --flake "$dotfiles_dir#$profile"
   else
-    sudo env PATH="$PATH" nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake "$dotfiles_dir#$profile"
+    sudo -H env PATH="$PATH" nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake "$dotfiles_dir#$profile"
   fi
 }
 
