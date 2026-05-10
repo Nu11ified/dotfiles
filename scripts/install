@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+profile="${1:-personal}"
+repo_url="${DOTFILES_REPO_URL:-https://github.com/Nu11ified/dotfiles.git}"
+dotfiles_dir="${DOTFILES_DIR:-$HOME/dotfiles}"
+
+source_nix() {
+  if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+    # shellcheck disable=SC1091
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  elif [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+    # shellcheck disable=SC1091
+    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+  fi
+}
+
+run_darwin_switch() {
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    if git ls-files --error-unmatch flake.nix >/dev/null 2>&1; then
+      :
+    else
+      echo "flake.nix is not tracked by git, so Nix cannot see it in this repo."
+      echo "Run this once from $dotfiles_dir:"
+      echo "git add flake.nix nix config docs scripts README.md emacs/init.el zsh/zsh-custom/aliases.zsh"
+      exit 1
+    fi
+  fi
+
+  if command -v darwin-rebuild >/dev/null 2>&1; then
+    sudo env PATH="$PATH" darwin-rebuild switch --flake "$dotfiles_dir#$profile"
+  else
+    sudo env PATH="$PATH" nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake "$dotfiles_dir#$profile"
+  fi
+}
+
+if ! command -v git >/dev/null 2>&1; then
+  xcode-select --install 2>/dev/null || true
+  until command -v git >/dev/null 2>&1; do
+    echo "Waiting for git. Finish the Xcode Command Line Tools install, then press Enter."
+    read -r _
+  done
+fi
+
+if [ ! -d "$dotfiles_dir/.git" ]; then
+  git clone "$repo_url" "$dotfiles_dir"
+fi
+
+cd "$dotfiles_dir"
+
+source_nix
+
+if ! command -v nix >/dev/null 2>&1; then
+  curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+  source_nix
+fi
+
+if ! command -v nix >/dev/null 2>&1; then
+  echo "Nix installed, but nix is still not on PATH."
+  echo "Open a new shell or run:"
+  echo ". /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+  exit 1
+fi
+
+run_darwin_switch
+
+echo "Installed dotfiles profile: $profile"

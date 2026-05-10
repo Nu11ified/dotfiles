@@ -1,0 +1,165 @@
+# Hyprland/i3-inspired AeroSpace config.
+# Reference: https://github.com/nikitabobko/AeroSpace
+
+start-at-login = true
+after-login-command = []
+after-startup-command = [
+  'exec-and-forget /bin/zsh -lc "$HOME/.config/spacebar/scripts/aerospace-status"',
+]
+
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+accordion-padding = 30
+default-root-container-layout = "tiles"
+default-root-container-orientation = "auto"
+
+[gaps]
+inner.horizontal = 8
+inner.vertical = 8
+outer.left = 8
+outer.bottom = 8
+outer.top = 8
+outer.right = 8
+
+[workspace-to-monitor-force-assignment]
+W = "main" # web
+T = "main" # terminal
+S = "main" # ssh/Termius
+E = "main" # Emacs
+M = "main" # music
+A = "main" # agentic coding
+C = "main" # code/IDEs
+N = "main" # notes/research
+G = "main" # git/factory
+
+[[on-window-detected]]
+if.app-id = "com.google.Chrome"
+run = ["move-node-to-workspace W"]
+
+[[on-window-detected]]
+if.app-id = "com.apple.Safari"
+run = ["move-node-to-workspace W"]
+
+[[on-window-detected]]
+if.app-id = "com.mitchellh.ghostty"
+run = ["move-node-to-workspace T"]
+
+[[on-window-detected]]
+if.app-id = "com.apple.Terminal"
+run = ["move-node-to-workspace T"]
+
+[[on-window-detected]]
+if.app-id = "com.termius-dmg.mac"
+run = ["move-node-to-workspace S"]
+
+[[on-window-detected]]
+if.app-id = "org.gnu.Emacs"
+run = ["move-node-to-workspace E"]
+
+[[on-window-detected]]
+if.app-id = "com.apple.Music"
+run = ["move-node-to-workspace M"]
+
+[[on-window-detected]]
+if.app-id = "com.spotify.client"
+run = ["move-node-to-workspace M"]
+
+[[on-window-detected]]
+if.app-id = "com.openai.codex"
+run = ["move-node-to-workspace A"]
+
+[[on-window-detected]]
+if.app-id = "com.anthropic.claude-code-url-handler"
+run = ["move-node-to-workspace A"]
+
+[[on-window-detected]]
+if.app-name-regex-substring = "Claude"
+run = ["move-node-to-workspace A"]
+
+[[on-window-detected]]
+if.app-id = "com.t3tools.t3code"
+run = ["move-node-to-workspace A"]
+
+[[on-window-detected]]
+if.app-name-regex-substring = "GitForge"
+run = ["move-node-to-workspace G"]
+
+[[on-window-detected]]
+if.app-name-regex-substring = "Factory"
+run = ["move-node-to-workspace G"]
+
+[[on-window-detected]]
+if.app-id = "com.todesktop.230313mzl4w4u92"
+run = ["move-node-to-workspace C"]
+
+[[on-window-detected]]
+if.app-id = "com.microsoft.VSCode"
+run = ["move-node-to-workspace C"]
+
+[[on-window-detected]]
+if.app-id = "com.apple.dt.Xcode"
+run = ["move-node-to-workspace C"]
+
+[mode.main.binding]
+alt-slash = "layout tiles horizontal vertical"
+alt-comma = "layout accordion horizontal vertical"
+
+alt-b = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace W \"Google Chrome\""'
+alt-enter = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace T Ghostty"'
+alt-s = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace S Termius"'
+alt-e = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace E Emacs"'
+alt-m = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace M Music"'
+alt-a = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace A Codex"'
+alt-c = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace C Cursor"'
+
+alt-h = "focus left"
+alt-j = "focus down"
+alt-k = "focus up"
+alt-l = "focus right"
+
+alt-shift-h = "move left"
+alt-shift-j = "move down"
+alt-shift-k = "move up"
+alt-shift-l = "move right"
+
+alt-minus = "resize smart -50"
+alt-equal = "resize smart +50"
+
+alt-1 = "workspace W"
+alt-2 = "workspace T"
+alt-3 = "workspace S"
+alt-4 = "workspace E"
+alt-5 = "workspace M"
+alt-6 = "workspace A"
+alt-7 = "workspace C"
+alt-8 = "workspace N"
+alt-9 = "workspace G"
+
+alt-shift-1 = "move-node-to-workspace W"
+alt-shift-2 = "move-node-to-workspace T"
+alt-shift-3 = "move-node-to-workspace S"
+alt-shift-4 = "move-node-to-workspace E"
+alt-shift-5 = "move-node-to-workspace M"
+alt-shift-6 = "move-node-to-workspace A"
+alt-shift-7 = "move-node-to-workspace C"
+alt-shift-8 = "move-node-to-workspace N"
+alt-shift-9 = "move-node-to-workspace G"
+
+alt-tab = "workspace-back-and-forth"
+alt-shift-tab = "move-workspace-to-monitor --wrap-around next"
+
+alt-f = "fullscreen"
+alt-shift-space = "layout floating tiling"
+alt-shift-r = "reload-config"
+alt-shift-semicolon = "mode service"
+
+[mode.service.binding]
+esc = ["reload-config", "mode main"]
+r = ["flatten-workspace-tree", "mode main"]
+f = ["layout floating tiling", "mode main"]
+backspace = ["close-all-windows-but-current", "mode main"]
+alt-shift-h = ["join-with left", "mode main"]
+alt-shift-j = ["join-with down", "mode main"]
+alt-shift-k = ["join-with up", "mode main"]
+alt-shift-l = ["join-with right", "mode main"]

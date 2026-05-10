@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+
+spacebar -m config position top
+spacebar -m config display main
+spacebar -m config height 32
+spacebar -m config title on
+spacebar -m config spaces off
+spacebar -m config clock on
+spacebar -m config power on
+spacebar -m config padding_left 16
+spacebar -m config padding_right 16
+spacebar -m config spacing_left 18
+spacebar -m config spacing_right 18
+spacebar -m config text_font "JetBrainsMono Nerd Font:Regular:13.0"
+spacebar -m config icon_font "JetBrainsMono Nerd Font:Bold:13.0"
+spacebar -m config background_color 0xee0b1020
+spacebar -m config foreground_color 0xffe5e7eb
+spacebar -m config space_icon_color 0xff94a3b8
+spacebar -m config space_icon_color_secondary 0xff38bdf8
+spacebar -m config dnd_icon_color 0xfff87171
+spacebar -m config clock_icon_color 0xffa78bfa
+spacebar -m config power_icon_color 0xff34d399
+spacebar -m config clock_icon "time"
+spacebar -m config clock_format "%a %b %d  %I:%M %p"
+spacebar -m config right_shell on
+spacebar -m config right_shell_icon "ws"
+spacebar -m config right_shell_command "$HOME/.config/spacebar/scripts/aerospace-status"

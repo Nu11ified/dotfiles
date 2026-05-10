@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+workspace="${1:?workspace is required}"
+app_name="${2:?app name is required}"
+
+aerospace workspace "$workspace"
+open -a "$app_name"
