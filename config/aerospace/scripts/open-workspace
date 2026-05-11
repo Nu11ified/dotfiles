@@ -3,6 +3,34 @@ set -euo pipefail
 
 workspace="${1:?workspace is required}"
 app_name="${2:?app name is required}"
+mode="${3:-activate}"
 
 aerospace workspace "$workspace"
-open -a "$app_name"
+
+case "$mode" in
+  new-window)
+    if [ "$app_name" = "Ghostty" ] && command -v ghostty >/dev/null 2>&1; then
+      open -na Ghostty
+      exit 0
+    fi
+    open -a "$app_name"
+    sleep 0.5
+    osascript \
+      -e "tell application \"$app_name\" to activate" \
+      -e 'delay 0.1' \
+      -e 'tell application "System Events" to keystroke "n" using command down'
+    ;;
+
+  new-tab)
+    open -a "$app_name"
+    sleep 0.5
+    osascript \
+      -e "tell application \"$app_name\" to activate" \
+      -e 'delay 0.1' \
+      -e 'tell application "System Events" to keystroke "t" using command down'
+    ;;
+
+  *)
+    open -a "$app_name"
+    ;;
+esac

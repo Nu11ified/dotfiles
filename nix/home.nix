@@ -40,6 +40,8 @@
       dots-install = "~/dotfiles/scripts/install";
       dots-update = "~/dotfiles/scripts/update";
       rebuild-current = "darwin-rebuild switch --flake ~/dotfiles#${username}-${profile}";
+      flake-show = "nix flake show ~/dotfiles";
+      flake-check = "nix flake check ~/dotfiles";
     };
     initContent = ''
       if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then

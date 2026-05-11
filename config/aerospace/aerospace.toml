@@ -130,13 +130,15 @@ alt-comma = "layout accordion horizontal vertical"
 alt-backslash = "layout tiles horizontal vertical"
 alt-shift-v = "layout accordion tiles"
 
-alt-b = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace W Zen"'
-alt-enter = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace T Ghostty"'
+alt-b = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace W Zen new-window"'
+alt-enter = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace T Ghostty new-window"'
 alt-u = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace S Termius"'
 alt-e = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace E Emacs"'
 alt-m = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace M Music"'
 alt-a = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace A Codex"'
 alt-c = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace C Cursor"'
+alt-shift-b = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace W Helium new-window"'
+alt-shift-enter = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace T Ghostty new-tab"'
 
 alt-q = "close --quit-if-last-window"
 alt-shift-q = 'exec-and-forget osascript -e "tell application \"System Events\" to keystroke \"q\" using command down"'
