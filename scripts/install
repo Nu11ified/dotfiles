@@ -4,6 +4,7 @@ set -euo pipefail
 profile="${1:-personal}"
 repo_url="${DOTFILES_REPO_URL:-https://github.com/Nu11ified/dotfiles.git}"
 dotfiles_dir="${DOTFILES_DIR:-$HOME/dotfiles}"
+dotfiles_user="${DOTFILES_USER:-${USER:-$(id -un)}}"
 
 source_nix() {
   if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
@@ -16,6 +17,8 @@ source_nix() {
 }
 
 run_darwin_switch() {
+  local flake_profile="$profile"
+
   if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     if git ls-files --error-unmatch flake.nix >/dev/null 2>&1; then
       :
@@ -29,10 +32,19 @@ run_darwin_switch() {
 
   prepare_home_manager_targets
 
+  if [ "$dotfiles_user" != "manas" ]; then
+    flake_profile="$dotfiles_user-$profile"
+    if ! git grep -Eq "^[[:space:]]*\"?$flake_profile\"?[[:space:]]*=[[:space:]]*mkDarwin" -- flake.nix; then
+      echo "This Mac uses username '$dotfiles_user', but '$flake_profile' is not defined in flake.nix."
+      echo "Add a darwinConfigurations.$flake_profile entry, then run this again."
+      exit 1
+    fi
+  fi
+
   if command -v darwin-rebuild >/dev/null 2>&1; then
-    sudo -H env PATH="$PATH" darwin-rebuild switch --flake "$dotfiles_dir#$profile"
+    sudo -H env PATH="$PATH" darwin-rebuild switch --flake "$dotfiles_dir#$flake_profile"
   else
-    sudo -H env PATH="$PATH" nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake "$dotfiles_dir#$profile"
+    sudo -H env PATH="$PATH" nix run nix-darwin --extra-experimental-features "nix-command flakes" -- switch --flake "$dotfiles_dir#$flake_profile"
   fi
 }
 

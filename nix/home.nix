@@ -1,4 +1,4 @@
-{ pkgs, username, ... }:
+{ pkgs, username, profile, ... }:
 
 {
   home.username = username;
@@ -39,6 +39,7 @@
       dotfiles-update = "~/dotfiles/scripts/update";
       dots-install = "~/dotfiles/scripts/install";
       dots-update = "~/dotfiles/scripts/update";
+      rebuild-current = "darwin-rebuild switch --flake ~/dotfiles#${username}-${profile}";
     };
     initContent = ''
       if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then

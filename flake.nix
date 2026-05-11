@@ -11,13 +11,12 @@
 
   outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, ... }:
     let
-      username = "manas";
       system = "aarch64-darwin";
-      specialArgs = { inherit inputs username; };
-    in
-    {
-      darwinConfigurations = {
-        personal = nix-darwin.lib.darwinSystem {
+      mkDarwin = { username, profile ? "personal" }:
+        let
+          specialArgs = { inherit inputs username profile; };
+        in
+        nix-darwin.lib.darwinSystem {
           inherit system specialArgs;
           modules = [
             ./nix/darwin.nix
@@ -31,20 +30,27 @@
             }
           ];
         };
+    in
+    {
+      darwinConfigurations = {
+        personal = mkDarwin {
+          username = "manas";
+          profile = "personal";
+        };
 
-        work = nix-darwin.lib.darwinSystem {
-          inherit system specialArgs;
-          modules = [
-            ./nix/darwin.nix
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.backupFileExtension = "hm-backup";
-              home-manager.extraSpecialArgs = specialArgs;
-              home-manager.users.${username} = import ./nix/home.nix;
-            }
-          ];
+        work = mkDarwin {
+          username = "manas";
+          profile = "work";
+        };
+
+        "manas-personal" = mkDarwin {
+          username = "manas";
+          profile = "personal";
+        };
+
+        "manas-work" = mkDarwin {
+          username = "manas";
+          profile = "work";
         };
       };
     };

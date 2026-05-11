@@ -32,7 +32,7 @@
   homebrew = {
     enable = true;
     onActivation = {
-      autoUpdate = true;
+      autoUpdate = false;
       upgrade = false;
       cleanup = "none";
     };
@@ -72,6 +72,11 @@
     NSGlobalDomain.KeyRepeat = 2;
     NSGlobalDomain.InitialKeyRepeat = 15;
     universalaccess.reduceTransparency = true;
+  };
+
+  power.sleep = {
+    display = 5;
+    harddisk = 10;
   };
 
   system.stateVersion = 6;

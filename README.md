@@ -21,6 +21,23 @@ For a work machine:
 The script installs Nix if needed, sources the Nix profile in the current shell,
 and applies the requested nix-darwin flake profile.
 
+The default `personal` and `work` profiles are currently for the macOS account
+`manas`. For a Mac with a different account name, add a username-specific
+configuration in `flake.nix` using the existing `mkDarwin` helper:
+
+```nix
+"youruser-work" = mkDarwin {
+  username = "youruser";
+  profile = "work";
+};
+```
+
+Then install with:
+
+```sh
+DOTFILES_USER=youruser ~/dotfiles/scripts/install work
+```
+
 After the first build, these aliases are available:
 
 ```sh

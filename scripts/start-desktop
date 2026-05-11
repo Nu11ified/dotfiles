@@ -24,17 +24,16 @@ pkill -x borders 2>/dev/null || true
 
 if command -v sketchybar >/dev/null 2>&1; then
   if command -v brew >/dev/null 2>&1; then
-    brew services restart sketchybar >/tmp/sketchybar-service.log 2>&1 || true
+    brew services start sketchybar >/tmp/sketchybar-service.log 2>&1 || true
   fi
-  pkill -x sketchybar 2>/dev/null || true
-  nohup sketchybar >/tmp/sketchybar.log 2>&1 &
+  sketchybar --reload "$HOME/.config/sketchybar/sketchybarrc" >/tmp/sketchybar.log 2>&1 || nohup sketchybar >/tmp/sketchybar.log 2>&1 &
 fi
 
 if command -v borders >/dev/null 2>&1; then
   if [ -x "$HOME/.config/borders/bordersrc" ]; then
     nohup "$HOME/.config/borders/bordersrc" >/tmp/borders.log 2>&1 &
   else
-    nohup borders active_color=0xfff5c2e7 inactive_color=0xff304462 width=5.0 hidpi=on style=round >/tmp/borders.log 2>&1 &
+    nohup borders active_color=0xffffffff inactive_color=0x00ffffff width=5.0 hidpi=on style=round >/tmp/borders.log 2>&1 &
   fi
 fi
 
