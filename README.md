@@ -21,7 +21,7 @@ For a work machine:
 The script installs Nix if needed, sources the Nix profile in the current shell,
 and applies the requested nix-darwin flake profile.
 
-The default `personal` and `work` profiles are currently for my personam macos account. For a Mac with a different account name, add a username-specific
+The default `personal` and `work` profiles are currently for my personal macos account. For a Mac with a different account name, add a username-specific
 configuration in `flake.nix` using the existing `mkDarwin` helper:
 
 ```nix
