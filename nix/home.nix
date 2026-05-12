@@ -6,10 +6,58 @@
   home.stateVersion = "25.05";
 
   home.packages = with pkgs; [
+    # Core build tooling
     cmake
     libtool
+
+    # Nix
     nil
     nixpkgs-fmt
+
+    # Rust
+    cargo
+    clippy
+    rust-analyzer
+    rustc
+    rustfmt
+
+    # Zig
+    zig
+    zls
+
+    # Lua
+    lua5_4
+    lua-language-server
+    luarocks
+    stylua
+
+    # Clojure and JVM
+    babashka
+    clojure
+    clojure-lsp
+    jdk
+    leiningen
+
+    # JavaScript and TypeScript
+    bun
+    deno
+    nodejs_22
+    pnpm
+    typescript
+    typescript-language-server
+    yarn
+
+    # Python
+    pyright
+    python313
+    ruff
+    uv
+
+    # Go
+    go
+    gopls
+
+    # Editor acceleration
     emacs-lsp-booster
   ];
 
