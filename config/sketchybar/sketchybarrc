@@ -58,7 +58,7 @@ add_workspace M 5 "󰝚" left
 add_workspace A 6 "󰚩" left
 add_workspace C 7 "󰨞" left
 add_workspace N 8 "󰎚" left
-add_workspace G 9 "󰊢" left
+add_workspace G 9 "󰍡" left
 
 sketchybar --add item front_app left \
   --set front_app \

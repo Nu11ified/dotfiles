@@ -38,7 +38,15 @@ M = "main" # music
 A = "main" # agentic coding
 C = "main" # code/IDEs
 N = "main" # notes/research
-G = "main" # git/factory
+G = "main" # messaging/Teams/iMessage
+
+[[on-window-detected]]
+if.app-id = "com.ctrlpotato50106"
+run = ["layout floating"]
+
+[[on-window-detected]]
+if.app-name-regex-substring = "Caldro"
+run = ["layout floating"]
 
 [[on-window-detected]]
 if.app-id = "com.google.Chrome"
@@ -66,7 +74,7 @@ run = ["move-node-to-workspace W"]
 
 [[on-window-detected]]
 if.app-id = "com.mitchellh.ghostty"
-run = ["move-node-to-workspace T"]
+run = ["move-node-to-workspace T", "layout floating"]
 
 [[on-window-detected]]
 if.app-id = "com.apple.Terminal"
@@ -105,11 +113,23 @@ if.app-id = "com.t3tools.t3code"
 run = ["move-node-to-workspace A"]
 
 [[on-window-detected]]
-if.app-name-regex-substring = "GitForge"
+if.app-id = "com.apple.MobileSMS"
 run = ["move-node-to-workspace G"]
 
 [[on-window-detected]]
-if.app-name-regex-substring = "Factory"
+if.app-name-regex-substring = "Messages"
+run = ["move-node-to-workspace G"]
+
+[[on-window-detected]]
+if.app-id = "com.microsoft.teams2"
+run = ["move-node-to-workspace G"]
+
+[[on-window-detected]]
+if.app-id = "com.microsoft.teams"
+run = ["move-node-to-workspace G"]
+
+[[on-window-detected]]
+if.app-name-regex-substring = "Microsoft Teams"
 run = ["move-node-to-workspace G"]
 
 [[on-window-detected]]
@@ -131,14 +151,18 @@ alt-backslash = "layout tiles horizontal vertical"
 alt-shift-v = "layout accordion tiles"
 
 alt-b = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace W Zen new-window"'
-alt-enter = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace T Ghostty new-window"'
+alt-enter = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace T Ghostty"'
 alt-u = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace S Termius"'
 alt-e = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace E Emacs"'
 alt-m = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace M Music"'
 alt-a = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace A Codex"'
 alt-c = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace C Cursor"'
 alt-shift-b = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace W Helium new-window"'
-alt-shift-enter = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace T Ghostty new-tab"'
+alt-shift-enter = '''exec-and-forget osascript -e '
+tell application "Ghostty" to activate
+delay 0.1
+tell application "System Events" to keystroke "n" using command down
+' '''
 
 alt-q = "close --quit-if-last-window"
 alt-shift-q = 'exec-and-forget osascript -e "tell application \"System Events\" to keystroke \"q\" using command down"'

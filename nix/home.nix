@@ -1,4 +1,4 @@
-{ pkgs, username, profile, ... }:
+{ pkgs, lib, username, profile, ... }:
 
 {
   home.username = username;
@@ -102,7 +102,8 @@
 
       export ZSH="$HOME/dotfiles/oh-my-zsh"
       export ZSH_CUSTOM="$HOME/dotfiles/zsh/zsh-custom"
-      export PATH="$HOME/.local/bin:/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin:$PATH"
+      export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin:$PATH"
+      export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 
       if [ -d "$ZSH" ]; then
         plugins=(git)
@@ -123,6 +124,16 @@
     enable = true;
     enableZshIntegration = true;
   };
+
+  home.activation.installOpenAICodexCli = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    export NPM_CONFIG_PREFIX="$HOME/.npm-global"
+    export PATH="$NPM_CONFIG_PREFIX/bin:${pkgs.nodejs_22}/bin:$PATH"
+    mkdir -p "$NPM_CONFIG_PREFIX"
+
+    if ! command -v codex >/dev/null 2>&1; then
+      ${pkgs.nodejs_22}/bin/npm install -g @openai/codex
+    fi
+  '';
 
   home.file.".emacs.d/early-init.el".source = ../emacs/early-init.el;
   home.file.".emacs.d/init.el".source = ../emacs/init.el;
@@ -163,6 +174,7 @@
     source = ../config/borders/bordersrc;
     executable = true;
   };
+  home.file.".config/ghostty/config".source = ../config/ghostty/config;
   home.file.".config/keyboard-shortcuts.md".source = ../docs/keyboard-shortcuts.md;
   home.file.".local/bin/dotfiles-install" = {
     source = ../scripts/install;

@@ -106,11 +106,16 @@ Inside Emacs, open it with `C-c ?`.
 | `Option-6` | `A` agents | `Option-a` opens Codex |
 | `Option-7` | `C` code | `Option-c` opens Cursor |
 | `Option-8` | `N` notes | manual workspace |
-| `Option-9` | `G` git/factory | automatic GitForge/Factory matching |
+| `Option-9` | `G` messaging | automatic Teams/Messages matching |
 
 SketchyBar subscribes to an `aerospace_workspace_change` event triggered by
 AeroSpace's `exec-on-workspace-change` callback, so the top bar shows the active
 AeroSpace workspace instead of relying on macOS Spaces.
+
+Ghostty is floated intentionally, and Ghostty tabs are disabled in
+`config/ghostty/config`. On macOS, Ghostty tabs are exposed through the
+accessibility APIs as separate windows, which makes tiling window managers such
+as AeroSpace shrink the visible terminal when a tab is opened.
 
 ## Layout
 

@@ -1,0 +1,31 @@
+# Ghostty tabs are intentionally disabled for AeroSpace.
+# On macOS, Ghostty exposes tabs as accessibility windows; AeroSpace then tiles
+# invisible tab windows and squeezes the visible terminal.
+
+font-family = JetBrainsMono Nerd Font
+font-size = 13
+theme = dark:Catppuccin Mocha,light:Catppuccin Latte
+window-padding-x = 8
+window-padding-y = 8
+window-inherit-working-directory = true
+
+keybind = super+t=new_window
+keybind = super+digit_1=ignore
+keybind = super+1=ignore
+keybind = super+digit_2=ignore
+keybind = super+2=ignore
+keybind = super+digit_3=ignore
+keybind = super+3=ignore
+keybind = super+digit_4=ignore
+keybind = super+4=ignore
+keybind = super+digit_5=ignore
+keybind = super+5=ignore
+keybind = super+digit_6=ignore
+keybind = super+6=ignore
+keybind = super+digit_7=ignore
+keybind = super+7=ignore
+keybind = super+digit_8=ignore
+keybind = super+8=ignore
+keybind = super+9=ignore
+keybind = ctrl+tab=ignore
+keybind = ctrl+shift+tab=ignore

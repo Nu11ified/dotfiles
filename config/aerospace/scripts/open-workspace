@@ -10,7 +10,12 @@ aerospace workspace "$workspace"
 case "$mode" in
   new-window)
     if [ "$app_name" = "Ghostty" ] && command -v ghostty >/dev/null 2>&1; then
-      open -na Ghostty
+      open -a Ghostty
+      sleep 0.3
+      osascript \
+        -e 'tell application "Ghostty" to activate' \
+        -e 'delay 0.1' \
+        -e 'tell application "System Events" to keystroke "n" using command down'
       exit 0
     fi
     open -a "$app_name"
@@ -22,8 +27,9 @@ case "$mode" in
     ;;
 
   new-tab)
+    # Tabs are app-local; avoid creating or moving an AeroSpace window here.
     open -a "$app_name"
-    sleep 0.5
+    sleep 0.3
     osascript \
       -e "tell application \"$app_name\" to activate" \
       -e 'delay 0.1' \

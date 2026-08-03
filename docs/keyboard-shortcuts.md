@@ -14,10 +14,11 @@
 | `Option-6` | Agentic coding workspace |
 | `Option-7` | Code/IDE workspace |
 | `Option-8` | Notes/research workspace |
-| `Option-9` | Git/factory workspace |
+| `Option-9` | Teams/iMessage workspace |
 | `Option-Shift-1..9` | Move window to matching workspace |
 | `Option-b` | Open Zen in Web |
 | `Option-Enter` | Open Ghostty in Terminal |
+| `Option-Shift-Enter` | Open a new Ghostty window |
 | `Option-u` | Open Termius in SSH |
 | `Option-e` | Open Emacs |
 | `Option-m` | Open Music |
