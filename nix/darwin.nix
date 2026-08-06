@@ -1,4 +1,4 @@
-{ pkgs, username, ... }:
+{ config, pkgs, username, ... }:
 
 {
   nix.enable = false;
@@ -36,14 +36,10 @@
       upgrade = false;
       cleanup = "none";
     };
-    taps = [
-      "FelixKratz/formulae"
-      "nikitabobko/tap"
-    ];
     brews = [
-      "borders"
+      "felixkratz/formulae/borders"
       "git"
-      "sketchybar"
+      "felixkratz/formulae/sketchybar"
       "starship"
       "zsh-autosuggestions"
       "television"
@@ -60,6 +56,15 @@
       "nikitabobko/tap/aerospace"
     ];
   };
+
+  system.activationScripts.preActivation.text = ''
+    brew="${config.homebrew.prefix}/bin/brew"
+    if [ -x "$brew" ]; then
+      /usr/bin/sudo --user=${username} --set-home "$brew" trust --formula felixkratz/formulae/borders >/dev/null
+      /usr/bin/sudo --user=${username} --set-home "$brew" trust --formula felixkratz/formulae/sketchybar >/dev/null
+      /usr/bin/sudo --user=${username} --set-home "$brew" trust --cask nikitabobko/tap/aerospace >/dev/null
+    fi
+  '';
 
   system.defaults = {
     dock.autohide = true;
