@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CONFIG_DIR="$(cd "$(dirname "$0")" && pwd)"
+CONFIG_DIR="$HOME/.config/sketchybar"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 
 sketchybar --bar \
@@ -66,6 +66,7 @@ sketchybar --add item front_app left \
     label="..." \
     label.width=110 \
     scroll_texts=on \
+    update_freq=10 \
     script="$PLUGIN_DIR/front_app.sh" \
     background.color=0x33222222 \
   --subscribe front_app front_app_switched

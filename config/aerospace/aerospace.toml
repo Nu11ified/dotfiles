@@ -41,14 +41,6 @@ N = "main" # notes/research
 G = "main" # messaging/Teams/iMessage
 
 [[on-window-detected]]
-if.app-id = "com.ctrlpotato50106"
-run = ["layout floating"]
-
-[[on-window-detected]]
-if.app-name-regex-substring = "Caldro"
-run = ["layout floating"]
-
-[[on-window-detected]]
 if.app-id = "com.google.Chrome"
 run = ["move-node-to-workspace W"]
 
