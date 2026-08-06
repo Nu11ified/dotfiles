@@ -59,16 +59,14 @@ if [ "$state" = "on" ]; then
   sketchybar --set aerospace.toggle \
     icon="󰐥" \
     icon.color=0xffa6e3a1 \
-    background.color=0x33222222 \
-    background.border_width=0
+    background.drawing=off
 else
   enabled=0
   focused=""
   sketchybar --set aerospace.toggle \
     icon="󰐥" \
     icon.color=0xfff38ba8 \
-    background.color=0x22f38ba8 \
-    background.border_width=0
+    background.drawing=off
 fi
 
 if [ "${SENDER:-}" != "aerospace_state_change" ]; then

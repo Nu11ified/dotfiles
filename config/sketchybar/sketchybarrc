@@ -34,20 +34,19 @@ sketchybar --add event aerospace_workspace_change
 sketchybar --add event aerospace_state_change
 sketchybar --remove '/space\..*/'
 
-sketchybar --add item aerospace.toggle left \
+sketchybar --add item aerospace.toggle right \
   --set aerospace.toggle \
-    width=26 \
-    padding_left=8 \
-    padding_right=2 \
+    width=24 \
+    padding_left=0 \
+    padding_right=0 \
     icon="󰐥" \
     icon.font="JetBrainsMono Nerd Font:Bold:13.0" \
+    icon.align=center \
+    icon.width=24 \
     label.drawing=off \
     click_script="$PLUGIN_DIR/aerospace_toggle.sh toggle" \
     script="$PLUGIN_DIR/aerospace_toggle.sh refresh" \
-    background.height=22 \
-    background.corner_radius=6 \
-    background.color=0x33222222 \
-    background.border_width=0 \
+    background.drawing=off \
   --subscribe aerospace.toggle aerospace_state_change
 
 add_workspace() {
@@ -77,8 +76,6 @@ add_workspace 6 6 "󰘔" left
 add_workspace 7 7 "󰘔" left
 add_workspace 8 8 "󰘔" left
 add_workspace 9 9 "󰘔" left
-
-sketchybar --move aerospace.toggle after space.9
 
 sketchybar --add item front_app left \
   --set front_app \
@@ -119,6 +116,8 @@ sketchybar --add item clock right \
     script='sketchybar --set "$NAME" label="$(date "+%I:%M")"' \
     background.color=0x00000000 \
     icon.color=0xffffffff
+
+sketchybar --move aerospace.toggle after clock
 
 "$PLUGIN_DIR/aerospace_toggle.sh" refresh
 sketchybar --update

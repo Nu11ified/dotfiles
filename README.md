@@ -132,7 +132,7 @@ SketchyBar subscribes to an `aerospace_workspace_change` event triggered by
 AeroSpace's `exec-on-workspace-change` callback, so the top bar shows the active
 AeroSpace workspace instead of relying on macOS Spaces.
 
-Click the power button after workspace `9` in SketchyBar to release or restore
+Click the power button left of the clock in SketchyBar to release or restore
 AeroSpace window management. Workspace buttons dim while AeroSpace is disabled
 and update immediately when it is enabled again.
 
