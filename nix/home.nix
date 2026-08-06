@@ -159,8 +159,11 @@
     fi
   '';
 
-  home.file.".config/emacs".source = config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/dotfiles/emacs";
+  home.file.".config/emacs" = {
+    source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/dotfiles/emacs";
+    force = true;
+  };
   home.file.".config/aerospace/aerospace.toml".source = ../config/aerospace/aerospace.toml;
   home.file.".config/aerospace/scripts/open-workspace" = {
     source = ../config/aerospace/scripts/open-workspace;
