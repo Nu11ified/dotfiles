@@ -8,7 +8,7 @@ persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 on-focused-monitor-changed = ["move-mouse monitor-lazy-center"]
 after-login-command = []
 after-startup-command = [
-  'exec-and-forget /bin/zsh -lc "sketchybar --trigger aerospace_workspace_change FOCUSED=$(/opt/homebrew/bin/aerospace list-workspaces --focused 2>/dev/null || true)"',
+  'exec-and-forget /bin/zsh -lc "$HOME/.config/sketchybar/plugins/aerospace_toggle.sh restore"',
   'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/sync-app-workspaces"',
 ]
 

@@ -132,6 +132,10 @@ SketchyBar subscribes to an `aerospace_workspace_change` event triggered by
 AeroSpace's `exec-on-workspace-change` callback, so the top bar shows the active
 AeroSpace workspace instead of relying on macOS Spaces.
 
+Click the `A` button in SketchyBar to release or restore AeroSpace window
+management. Workspace buttons dim while AeroSpace is disabled and update
+immediately when it is enabled again.
+
 Ghostty windows are tiled. Ghostty tabs remain disabled in `config/ghostty/config`
 because macOS exposes those tabs through accessibility APIs as separate windows.
 Use `Option-Enter` for another tiled Ghostty window, `Option-Tab` to cycle

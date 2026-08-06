@@ -37,6 +37,7 @@ if command -v sketchybar >/dev/null 2>&1; then
   sketchybar --reload >/tmp/sketchybar.log 2>&1 || nohup sketchybar >/tmp/sketchybar.log 2>&1 &
   sleep 1
   bash "$sketchybar_config" >>/tmp/sketchybar.log 2>&1 || true
+  "$HOME/.config/sketchybar/plugins/aerospace_toggle.sh" restore || true
 fi
 
 if command -v borders >/dev/null 2>&1; then

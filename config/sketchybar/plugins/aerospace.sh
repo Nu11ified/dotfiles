@@ -3,6 +3,25 @@ set -euo pipefail
 
 workspace="${1:?workspace is required}"
 focused="${FOCUSED:-}"
+enabled="${ENABLED:-}"
+state_file="${XDG_STATE_HOME:-$HOME/.local/state}/aerospace/enabled"
+
+if [ -z "$enabled" ]; then
+  if [ -r "$state_file" ] && [ "$(cat "$state_file")" = "off" ]; then
+    enabled=0
+  else
+    enabled=1
+  fi
+fi
+
+if [ "$enabled" != "1" ]; then
+  sketchybar --set "$NAME" \
+    background.color=0x00000000 \
+    background.border_color=0x00000000 \
+    icon.color=0xff6c6875 \
+    label.drawing=off
+  exit 0
+fi
 
 if [ -z "$focused" ] && command -v aerospace >/dev/null 2>&1; then
   focused="$(aerospace list-workspaces --focused 2>/dev/null || true)"

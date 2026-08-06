@@ -31,7 +31,20 @@ sketchybar --default \
   padding_right=6
 
 sketchybar --add event aerospace_workspace_change
+sketchybar --add event aerospace_state_change
 sketchybar --remove '/space\..*/'
+
+sketchybar --add item aerospace.toggle left \
+  --set aerospace.toggle \
+    width=34 \
+    icon="A" \
+    label.drawing=off \
+    click_script="$PLUGIN_DIR/aerospace_toggle.sh toggle" \
+    script="$PLUGIN_DIR/aerospace_toggle.sh refresh" \
+    background.color=0xffffffff \
+    background.border_width=1 \
+    background.border_color=0xffffffff \
+  --subscribe aerospace.toggle aerospace_state_change
 
 add_workspace() {
   local item="$1"
@@ -43,12 +56,12 @@ add_workspace() {
     --set "space.$item" \
       icon="$number:$icon" \
       label.drawing=off \
-      click_script="aerospace workspace $item" \
+      click_script="$PLUGIN_DIR/aerospace_toggle.sh workspace $item" \
       script="$PLUGIN_DIR/aerospace.sh $item" \
       background.color=0x33222222 \
       background.border_width=1 \
       background.border_color=0x00333333 \
-    --subscribe "space.$item" aerospace_workspace_change
+    --subscribe "space.$item" aerospace_workspace_change aerospace_state_change
 }
 
 add_workspace 1 1 "󰖟" left
@@ -101,5 +114,5 @@ sketchybar --add item clock right \
     background.color=0x00000000 \
     icon.color=0xffffffff
 
-sketchybar --trigger aerospace_workspace_change FOCUSED="$(aerospace list-workspaces --focused 2>/dev/null || true)"
+"$PLUGIN_DIR/aerospace_toggle.sh" refresh
 sketchybar --update

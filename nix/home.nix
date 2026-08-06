@@ -187,6 +187,10 @@
     source = ../config/sketchybar/plugins/aerospace.sh;
     executable = true;
   };
+  home.file.".config/sketchybar/plugins/aerospace_toggle.sh" = {
+    source = ../config/sketchybar/plugins/aerospace_toggle.sh;
+    executable = true;
+  };
   home.file.".config/sketchybar/plugins/front_app.sh" = {
     source = ../config/sketchybar/plugins/front_app.sh;
     executable = true;
