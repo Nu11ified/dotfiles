@@ -81,8 +81,31 @@ dots-update work
 applying the Nix config. Manual reloads are only needed when you are testing a
 bar/window-manager change without running a full update.
 
-Emacs loads from `~/.emacs.d`, managed by Home Manager. Restart Emacs after
-changing `emacs/init.el`, or evaluate the changed buffer with `M-x eval-buffer`.
+Emacs loads from `~/.config/emacs`, which Home Manager links directly to the
+`emacs` Git submodule. Restart Emacs after changing `emacs/init.el`, or evaluate
+the changed buffer with `M-x eval-buffer`.
+
+The Emacs repository also works independently on a machine without Nix:
+
+```sh
+git clone https://github.com/Nu11ified/emacs.git ~/Documents/emacs
+~/Documents/emacs/bootstrap.sh
+```
+
+After updating and pushing the Emacs repository, pin that revision in the
+dotfiles repository:
+
+```sh
+cd ~/dotfiles/emacs
+git pull --ff-only
+cd ..
+git add emacs
+git commit -m "Update Emacs configuration"
+git push
+```
+
+`dotfiles-install` and `dotfiles-update` initialize submodules at the exact
+revision recorded by the parent repository.
 
 ## Keyboard Guide
 
@@ -127,4 +150,4 @@ as AeroSpace shrink the visible terminal when a tab is opened.
 - `config/sketchybar/sketchybarrc`: dark top bar.
 - `config/sketchybar/plugins/aerospace.sh`: workspace status for SketchyBar.
 - `config/borders/bordersrc`: focused-window borders.
-- `emacs/init.el`: default-keybinding editor and Org notes setup.
+- `emacs/`: pinned submodule for the standalone Emacs configuration.

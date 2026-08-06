@@ -1,0 +1,7 @@
+[submodule "emacs"]
+	path = emacs
+	url = https://github.com/Nu11ified/emacs.git
+	branch = main
+[submodule "oh-my-zsh"]
+	path = oh-my-zsh
+	url = https://github.com/ohmyzsh/ohmyzsh.git

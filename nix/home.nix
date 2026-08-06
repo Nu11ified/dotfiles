@@ -1,4 +1,4 @@
-{ pkgs, lib, username, profile, ... }:
+{ pkgs, lib, config, username, profile, ... }:
 
 {
   home.username = username;
@@ -135,8 +135,32 @@
     fi
   '';
 
-  home.file.".emacs.d/early-init.el".source = ../emacs/early-init.el;
-  home.file.".emacs.d/init.el".source = ../emacs/init.el;
+  home.activation.migrateLegacyEmacsConfig = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
+    backup_legacy_emacs_path() {
+      local legacy_path="$1"
+      local backup_path="$legacy_path.pre-xdg"
+
+      if [ -e "$backup_path" ] || [ -L "$backup_path" ]; then
+        backup_path="$backup_path.$(date +%Y%m%d%H%M%S)"
+      fi
+
+      mv "$legacy_path" "$backup_path"
+      echo "Moved legacy Emacs path to $backup_path"
+    }
+
+    if [ -e "$HOME/.emacs" ] || [ -L "$HOME/.emacs" ]; then
+      backup_legacy_emacs_path "$HOME/.emacs"
+    fi
+    if [ -e "$HOME/.emacs.el" ] || [ -L "$HOME/.emacs.el" ]; then
+      backup_legacy_emacs_path "$HOME/.emacs.el"
+    fi
+    if [ -e "$HOME/.emacs.d/init.el" ] || [ -L "$HOME/.emacs.d/init.el" ]; then
+      backup_legacy_emacs_path "$HOME/.emacs.d"
+    fi
+  '';
+
+  home.file.".config/emacs".source = config.lib.file.mkOutOfStoreSymlink
+    "${config.home.homeDirectory}/dotfiles/emacs";
   home.file.".config/aerospace/aerospace.toml".source = ../config/aerospace/aerospace.toml;
   home.file.".config/aerospace/scripts/open-workspace" = {
     source = ../config/aerospace/scripts/open-workspace;

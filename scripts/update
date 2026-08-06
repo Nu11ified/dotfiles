@@ -24,7 +24,7 @@ run_darwin_switch() {
     else
       echo "flake.nix is not tracked by git, so Nix cannot see it in this repo."
       echo "Run this once from $dotfiles_dir:"
-      echo "git add flake.nix nix config docs scripts README.md emacs/init.el zsh/zsh-custom/aliases.zsh"
+      echo "git add flake.nix nix config docs scripts README.md .gitmodules emacs zsh/zsh-custom/aliases.zsh"
       exit 1
     fi
   fi
@@ -54,19 +54,13 @@ prepare_home_manager_targets() {
   local emacs_backup="$HOME/.emacs.d.pre-home-manager"
 
   if [ -L "$zshrc" ] && readlink "$zshrc" | grep -q '^/nix/store/'; then
-    return
-  fi
-
-  if [ -e "$zshrc" ] || [ -L "$zshrc" ]; then
+    :
+  elif [ -e "$zshrc" ] || [ -L "$zshrc" ]; then
     if [ -e "$backup" ] || [ -L "$backup" ]; then
       backup="$HOME/.zshrc.pre-home-manager.$(date +%Y%m%d%H%M%S)"
     fi
     mv "$zshrc" "$backup"
     echo "Moved existing ~/.zshrc to $backup"
-  fi
-
-  if [ -L "$emacs_dir" ] && readlink "$emacs_dir" | grep -q '^/nix/store/'; then
-    return
   fi
 
   if [ -e "$emacs_dir" ] || [ -L "$emacs_dir" ]; then
@@ -95,6 +89,8 @@ if ! command -v nix >/dev/null 2>&1; then
 fi
 
 git pull --ff-only
+git submodule sync --recursive
+git submodule update --init --recursive
 run_darwin_switch
 
 if command -v aerospace >/dev/null 2>&1; then
