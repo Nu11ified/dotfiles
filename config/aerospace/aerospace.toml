@@ -1,7 +1,11 @@
 # Hyprland/i3-inspired AeroSpace config.
 # Reference: https://github.com/nikitabobko/AeroSpace
 
+config-version = 2
 start-at-login = true
+automatically-unhide-macos-hidden-apps = true
+persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+on-focused-monitor-changed = ["move-mouse monitor-lazy-center"]
 after-login-command = []
 after-startup-command = [
   'exec-and-forget /bin/zsh -lc "sketchybar --trigger aerospace_workspace_change FOCUSED=$(/opt/homebrew/bin/aerospace list-workspaces --focused 2>/dev/null || true)"',
@@ -22,119 +26,83 @@ default-root-container-layout = "tiles"
 default-root-container-orientation = "auto"
 
 [gaps]
-inner.horizontal = 10
-inner.vertical = 10
-outer.left = 15
-outer.bottom = 15
+inner.horizontal = 8
+inner.vertical = 8
+outer.left = 10
+outer.bottom = 10
 outer.top = 16
-outer.right = 15
+outer.right = 10
 
 [workspace-to-monitor-force-assignment]
-W = "main" # web
-T = "main" # terminal
-S = "main" # ssh/Termius
-E = "main" # Emacs
-M = "main" # music
-A = "main" # agentic coding
-C = "main" # code/IDEs
-N = "main" # notes/research
-G = "main" # messaging/Teams/iMessage
-
-[[on-window-detected]]
-if.app-id = "com.google.Chrome"
-run = ["move-node-to-workspace W"]
-
-[[on-window-detected]]
-if.app-id = "com.apple.Safari"
-run = ["move-node-to-workspace W"]
+1 = "main" # Zen
+2 = "main" # terminals, Termius, Emacs
+3 = "main" # agents
+4 = "main" # code editors
+5 = "main" # messaging
+6 = "main" # misc
+7 = "main" # misc
+8 = "main" # misc
+9 = "main" # misc
 
 [[on-window-detected]]
 if.app-id = "app.zen-browser.zen"
-run = ["move-node-to-workspace W"]
+run = ["move-node-to-workspace 1"]
 
 [[on-window-detected]]
 if.app-name-regex-substring = "Zen"
-run = ["move-node-to-workspace W"]
-
-[[on-window-detected]]
-if.app-id = "net.imput.helium"
-run = ["move-node-to-workspace W"]
-
-[[on-window-detected]]
-if.app-name-regex-substring = "Helium"
-run = ["move-node-to-workspace W"]
+run = ["move-node-to-workspace 1"]
 
 [[on-window-detected]]
 if.app-id = "com.mitchellh.ghostty"
-run = ["move-node-to-workspace T", "layout floating"]
+run = ["move-node-to-workspace 2"]
 
 [[on-window-detected]]
 if.app-id = "com.apple.Terminal"
-run = ["move-node-to-workspace T"]
+run = ["move-node-to-workspace 2"]
 
 [[on-window-detected]]
 if.app-id = "com.termius-dmg.mac"
-run = ["move-node-to-workspace S"]
+run = ["move-node-to-workspace 2"]
 
 [[on-window-detected]]
 if.app-id = "org.gnu.Emacs"
-run = ["move-node-to-workspace E"]
-
-[[on-window-detected]]
-if.app-id = "com.apple.Music"
-run = ["move-node-to-workspace M"]
-
-[[on-window-detected]]
-if.app-id = "com.spotify.client"
-run = ["move-node-to-workspace M"]
+run = ["move-node-to-workspace 2"]
 
 [[on-window-detected]]
 if.app-id = "com.openai.codex"
-run = ["move-node-to-workspace A"]
+run = ["move-node-to-workspace 3"]
 
 [[on-window-detected]]
 if.app-id = "com.anthropic.claude-code-url-handler"
-run = ["move-node-to-workspace A"]
+run = ["move-node-to-workspace 3"]
 
 [[on-window-detected]]
 if.app-name-regex-substring = "Claude"
-run = ["move-node-to-workspace A"]
-
-[[on-window-detected]]
-if.app-id = "com.t3tools.t3code"
-run = ["move-node-to-workspace A"]
-
-[[on-window-detected]]
-if.app-id = "com.apple.MobileSMS"
-run = ["move-node-to-workspace G"]
-
-[[on-window-detected]]
-if.app-name-regex-substring = "Messages"
-run = ["move-node-to-workspace G"]
-
-[[on-window-detected]]
-if.app-id = "com.microsoft.teams2"
-run = ["move-node-to-workspace G"]
-
-[[on-window-detected]]
-if.app-id = "com.microsoft.teams"
-run = ["move-node-to-workspace G"]
-
-[[on-window-detected]]
-if.app-name-regex-substring = "Microsoft Teams"
-run = ["move-node-to-workspace G"]
+run = ["move-node-to-workspace 3"]
 
 [[on-window-detected]]
 if.app-id = "com.todesktop.230313mzl4w4u92"
-run = ["move-node-to-workspace C"]
+run = ["move-node-to-workspace 4"]
 
 [[on-window-detected]]
 if.app-id = "com.microsoft.VSCode"
-run = ["move-node-to-workspace C"]
+run = ["move-node-to-workspace 4"]
 
 [[on-window-detected]]
-if.app-id = "com.apple.dt.Xcode"
-run = ["move-node-to-workspace C"]
+if.app-id = "com.apple.MobileSMS"
+run = ["move-node-to-workspace 5"]
+
+[[on-window-detected]]
+if.app-name-regex-substring = "Messages"
+run = ["move-node-to-workspace 5"]
+
+[[on-window-detected]]
+if.app-id = "com.hnc.Discord"
+run = ["move-node-to-workspace 5"]
+
+[[on-window-detected]]
+if.app-name-regex-substring = "Discord"
+run = ["move-node-to-workspace 5"]
 
 [mode.main.binding]
 alt-slash = "layout tiles horizontal vertical"
@@ -142,34 +110,29 @@ alt-comma = "layout accordion horizontal vertical"
 alt-backslash = "layout tiles horizontal vertical"
 alt-shift-v = "layout accordion tiles"
 
-alt-b = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace W Zen new-window"'
-alt-enter = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace T Ghostty"'
-alt-u = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace S Termius"'
-alt-e = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace E Emacs"'
-alt-m = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace M Music"'
-alt-a = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace A Codex"'
-alt-c = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace C Cursor"'
-alt-shift-b = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace W Helium new-window"'
-alt-shift-enter = '''exec-and-forget osascript -e '
-tell application "Ghostty" to activate
-delay 0.1
-tell application "System Events" to keystroke "n" using command down
-' '''
+alt-b = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace 1 Zen new-window"'
+alt-enter = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace 2 Ghostty new-window"'
+alt-u = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace 2 Termius"'
+alt-e = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace 2 Emacs"'
+alt-a = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace 3 Codex"'
+alt-c = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace 4 Cursor"'
+alt-v = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace 4 \"Visual Studio Code\""'
+alt-i = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace 5 Messages"'
+alt-d = 'exec-and-forget /bin/zsh -lc "$HOME/.config/aerospace/scripts/open-workspace 5 Discord"'
 
 alt-q = "close --quit-if-last-window"
 alt-shift-q = 'exec-and-forget osascript -e "tell application \"System Events\" to keystroke \"q\" using command down"'
 alt-shift-m = "macos-native-minimize"
-alt-shift-d = 'exec-and-forget osascript -e "tell application \"System Events\" to keystroke \"h\" using command down"'
 
-alt-h = "focus left"
-alt-j = "focus down"
-alt-k = "focus up"
-alt-l = "focus right"
+alt-h = "focus --boundaries-action wrap-around-the-workspace left"
+alt-j = "focus --boundaries-action wrap-around-the-workspace down"
+alt-k = "focus --boundaries-action wrap-around-the-workspace up"
+alt-l = "focus --boundaries-action wrap-around-the-workspace right"
 
-alt-shift-h = "move left"
-alt-shift-j = "move down"
-alt-shift-k = "move up"
-alt-shift-l = "move right"
+alt-shift-h = "swap --wrap-around left"
+alt-shift-j = "swap --wrap-around down"
+alt-shift-k = "swap --wrap-around up"
+alt-shift-l = "swap --wrap-around right"
 
 alt-ctrl-h = "join-with left"
 alt-ctrl-j = "join-with down"
@@ -181,28 +144,33 @@ alt-equal = "resize smart +50"
 alt-shift-minus = "resize height -50"
 alt-shift-equal = "resize height +50"
 
-alt-1 = "workspace W"
-alt-2 = "workspace T"
-alt-3 = "workspace S"
-alt-4 = "workspace E"
-alt-5 = "workspace M"
-alt-6 = "workspace A"
-alt-7 = "workspace C"
-alt-8 = "workspace N"
-alt-9 = "workspace G"
+alt-1 = "workspace 1"
+alt-2 = "workspace 2"
+alt-3 = "workspace 3"
+alt-4 = "workspace 4"
+alt-5 = "workspace 5"
+alt-6 = "workspace 6"
+alt-7 = "workspace 7"
+alt-8 = "workspace 8"
+alt-9 = "workspace 9"
 
-alt-shift-1 = "move-node-to-workspace W"
-alt-shift-2 = "move-node-to-workspace T"
-alt-shift-3 = "move-node-to-workspace S"
-alt-shift-4 = "move-node-to-workspace E"
-alt-shift-5 = "move-node-to-workspace M"
-alt-shift-6 = "move-node-to-workspace A"
-alt-shift-7 = "move-node-to-workspace C"
-alt-shift-8 = "move-node-to-workspace N"
-alt-shift-9 = "move-node-to-workspace G"
+alt-shift-1 = "move-node-to-workspace 1"
+alt-shift-2 = "move-node-to-workspace 2"
+alt-shift-3 = "move-node-to-workspace 3"
+alt-shift-4 = "move-node-to-workspace 4"
+alt-shift-5 = "move-node-to-workspace 5"
+alt-shift-6 = "move-node-to-workspace 6"
+alt-shift-7 = "move-node-to-workspace 7"
+alt-shift-8 = "move-node-to-workspace 8"
+alt-shift-9 = "move-node-to-workspace 9"
 
-alt-tab = "workspace-back-and-forth"
-alt-shift-tab = "move-workspace-to-monitor --wrap-around next"
+alt-tab = "focus --boundaries-action wrap-around-the-workspace dfs-next"
+alt-shift-tab = "focus --boundaries-action wrap-around-the-workspace dfs-prev"
+alt-space = "focus-back-and-forth"
+alt-w = "workspace-back-and-forth"
+alt-ctrl-tab = "move-workspace-to-monitor --wrap-around next"
+alt-0 = "balance-sizes"
+alt-shift-0 = ["flatten-workspace-tree", "balance-sizes"]
 
 alt-f = "fullscreen"
 alt-s = "layout v_accordion"
@@ -225,7 +193,7 @@ shift-l = "move right"
 
 [mode.service.binding]
 esc = ["reload-config", "mode main"]
-r = ["flatten-workspace-tree", "mode main"]
+r = ["flatten-workspace-tree", "balance-sizes", "mode main"]
 f = ["layout floating tiling", "mode main"]
 backspace = ["close-all-windows-but-current", "mode main"]
 alt-shift-h = ["join-with left", "mode main"]

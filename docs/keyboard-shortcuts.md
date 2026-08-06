@@ -4,27 +4,26 @@
 
 | Shortcut | Action |
 | --- | --- |
-| `Option-h/j/k/l` | Focus left/down/up/right |
-| `Option-Shift-h/j/k/l` | Move window left/down/up/right |
-| `Option-1` | Web workspace |
-| `Option-2` | Terminal workspace |
-| `Option-3` | Termius/SSH workspace |
-| `Option-4` | Emacs workspace |
-| `Option-5` | Music workspace |
-| `Option-6` | Agentic coding workspace |
-| `Option-7` | Code/IDE workspace |
-| `Option-8` | Notes/research workspace |
-| `Option-9` | Teams/iMessage workspace |
+| `Option-h/j/k/l` | Focus left/down/up/right, wrapping at workspace edges |
+| `Option-Shift-h/j/k/l` | Swap focused window left/down/up/right |
+| `Option-Tab` / `Option-Shift-Tab` | Cycle through windows forward/backward |
+| `Option-Space` | Toggle the two most recently focused windows/workspaces |
+| `Option-1` | Zen workspace |
+| `Option-2` | Ghostty, Terminal, Termius, and Emacs workspace |
+| `Option-3` | Codex and Claude workspace |
+| `Option-4` | Cursor and VS Code workspace |
+| `Option-5` | Messages and Discord workspace |
+| `Option-6..9` | Unassigned misc workspaces |
 | `Option-Shift-1..9` | Move window to matching workspace |
-| `Option-b` | Open Zen in Web |
-| `Option-Enter` | Open Ghostty in Terminal |
-| `Option-Shift-Enter` | Open a new Ghostty window |
-| `Option-u` | Open Termius in SSH |
-| `Option-e` | Open Emacs |
-| `Option-m` | Open Music |
-| `Option-a` | Open Codex agent workspace |
-| `Option-c` | Open Cursor code workspace |
-| `Option-Tab` | Toggle previous workspace |
+| `Option-b` | Open a new Zen window in workspace 1 |
+| `Option-Enter` | Open a new Ghostty window in workspace 2 |
+| `Option-u` / `Option-e` | Open Termius / Emacs in workspace 2 |
+| `Option-a` | Open Codex in workspace 3 |
+| `Option-c` / `Option-v` | Open Cursor / VS Code in workspace 4 |
+| `Option-i` / `Option-d` | Open Messages / Discord in workspace 5 |
+| `Option-w` | Toggle previous workspace |
+| `Option-0` | Rebalance all tiled windows |
+| `Option-Shift-0` | Reset and rebalance the workspace layout |
 | `Option-/` | Toggle horizontal/vertical tiles |
 | `Option-,` | Toggle accordion layout |
 | `Option-\\` | Toggle tile orientation |
@@ -36,7 +35,6 @@
 | `Option-q` | Close focused window |
 | `Option-Shift-q` | Quit focused app |
 | `Option-Shift-m` | Minimize focused window |
-| `Option-Shift-d` | Hide focused app |
 | `Option--` / `Option-=` | Resize focused window |
 | `Option-r` | Resize mode |
 | `Option-Shift-r` | Reload AeroSpace config |

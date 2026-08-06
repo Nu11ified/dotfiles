@@ -9,21 +9,15 @@ aerospace workspace "$workspace"
 
 case "$mode" in
   new-window)
-    if [ "$app_name" = "Ghostty" ] && command -v ghostty >/dev/null 2>&1; then
-      open -a Ghostty
+    was_running="$(osascript -e "application \"$app_name\" is running" 2>/dev/null || printf false)"
+    open -a "$app_name"
+    if [ "$was_running" = "true" ]; then
       sleep 0.3
       osascript \
-        -e 'tell application "Ghostty" to activate' \
+        -e "tell application \"$app_name\" to activate" \
         -e 'delay 0.1' \
         -e 'tell application "System Events" to keystroke "n" using command down'
-      exit 0
     fi
-    open -a "$app_name"
-    sleep 0.5
-    osascript \
-      -e "tell application \"$app_name\" to activate" \
-      -e 'delay 0.1' \
-      -e 'tell application "System Events" to keystroke "n" using command down'
     ;;
 
   new-tab)

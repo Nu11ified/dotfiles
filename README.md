@@ -121,24 +121,21 @@ Inside Emacs, open it with `C-c ?`.
 
 | Key | Workspace | App shortcut |
 | --- | --- | --- |
-| `Option-1` | `W` web | `Option-b` opens Google Chrome |
-| `Option-2` | `T` terminal | `Option-Enter` opens Ghostty |
-| `Option-3` | `S` ssh | `Option-s` opens Termius |
-| `Option-4` | `E` emacs | `Option-e` opens Emacs |
-| `Option-5` | `M` music | `Option-m` opens Music |
-| `Option-6` | `A` agents | `Option-a` opens Codex |
-| `Option-7` | `C` code | `Option-c` opens Cursor |
-| `Option-8` | `N` notes | manual workspace |
-| `Option-9` | `G` messaging | automatic Teams/Messages matching |
+| `Option-1` | Zen | `Option-b` opens a new Zen window |
+| `Option-2` | Terminals and Emacs | `Option-Enter` opens a new Ghostty window |
+| `Option-3` | Codex and Claude | `Option-a` opens Codex |
+| `Option-4` | Cursor and VS Code | `Option-c` opens Cursor |
+| `Option-5` | Messages and Discord | `Option-i` opens Messages |
+| `Option-6..9` | Miscellaneous | no automatic app assignment |
 
 SketchyBar subscribes to an `aerospace_workspace_change` event triggered by
 AeroSpace's `exec-on-workspace-change` callback, so the top bar shows the active
 AeroSpace workspace instead of relying on macOS Spaces.
 
-Ghostty is floated intentionally, and Ghostty tabs are disabled in
-`config/ghostty/config`. On macOS, Ghostty tabs are exposed through the
-accessibility APIs as separate windows, which makes tiling window managers such
-as AeroSpace shrink the visible terminal when a tab is opened.
+Ghostty windows are tiled. Ghostty tabs remain disabled in `config/ghostty/config`
+because macOS exposes those tabs through accessibility APIs as separate windows.
+Use `Option-Enter` for another tiled Ghostty window, `Option-Tab` to cycle
+windows, and `Option-Shift-h/j/k/l` to reorder them.
 
 ## Layout
 
