@@ -172,13 +172,11 @@
   home.file.".config/aerospace/scripts/open-workspace" = {
     source = config.lib.file.mkOutOfStoreSymlink
       "${config.home.homeDirectory}/dotfiles/config/aerospace/scripts/open-workspace";
-    executable = true;
     force = true;
   };
   home.file.".config/aerospace/scripts/sync-app-workspaces" = {
     source = config.lib.file.mkOutOfStoreSymlink
       "${config.home.homeDirectory}/dotfiles/config/aerospace/scripts/sync-app-workspaces";
-    executable = true;
     force = true;
   };
   home.file.".config/sketchybar/sketchybarrc" = {
