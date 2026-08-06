@@ -8,8 +8,12 @@ theme = dark:Catppuccin Mocha,light:Catppuccin Latte
 window-padding-x = 8
 window-padding-y = 8
 window-inherit-working-directory = true
+macos-titlebar-style = hidden
 
 keybind = super+t=new_window
+keybind = super+shift+[=ignore
+keybind = super+shift+]=ignore
+keybind = super+alt+w=ignore
 keybind = super+digit_1=ignore
 keybind = super+1=ignore
 keybind = super+digit_2=ignore
