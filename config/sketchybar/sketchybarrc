@@ -36,14 +36,18 @@ sketchybar --remove '/space\..*/'
 
 sketchybar --add item aerospace.toggle left \
   --set aerospace.toggle \
-    width=34 \
-    icon="A" \
+    width=26 \
+    padding_left=8 \
+    padding_right=2 \
+    icon="󰐥" \
+    icon.font="JetBrainsMono Nerd Font:Bold:13.0" \
     label.drawing=off \
     click_script="$PLUGIN_DIR/aerospace_toggle.sh toggle" \
     script="$PLUGIN_DIR/aerospace_toggle.sh refresh" \
-    background.color=0xffffffff \
-    background.border_width=1 \
-    background.border_color=0xffffffff \
+    background.height=22 \
+    background.corner_radius=6 \
+    background.color=0x33222222 \
+    background.border_width=0 \
   --subscribe aerospace.toggle aerospace_state_change
 
 add_workspace() {
@@ -73,6 +77,8 @@ add_workspace 6 6 "󰘔" left
 add_workspace 7 7 "󰘔" left
 add_workspace 8 8 "󰘔" left
 add_workspace 9 9 "󰘔" left
+
+sketchybar --move aerospace.toggle after space.9
 
 sketchybar --add item front_app left \
   --set front_app \

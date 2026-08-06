@@ -57,18 +57,18 @@ if [ "$state" = "on" ]; then
   enabled=1
   focused="$(aerospace list-workspaces --focused 2>/dev/null || true)"
   sketchybar --set aerospace.toggle \
-    icon="A" \
-    icon.color=0xff111111 \
-    background.color=0xffffffff \
-    background.border_color=0xffffffff
+    icon="󰐥" \
+    icon.color=0xffa6e3a1 \
+    background.color=0x33222222 \
+    background.border_width=0
 else
   enabled=0
   focused=""
   sketchybar --set aerospace.toggle \
-    icon="A×" \
+    icon="󰐥" \
     icon.color=0xfff38ba8 \
-    background.color=0x33f38ba8 \
-    background.border_color=0xfff38ba8
+    background.color=0x22f38ba8 \
+    background.border_width=0
 fi
 
 if [ "${SENDER:-}" != "aerospace_state_change" ]; then
