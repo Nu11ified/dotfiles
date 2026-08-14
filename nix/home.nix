@@ -1,5 +1,15 @@
 { pkgs, lib, config, username, profile, ... }:
 
+let
+  nodeDefaultVersion = "22.23.2";
+  nvmSource = pkgs.fetchFromGitHub {
+    owner = "nvm-sh";
+    repo = "nvm";
+    rev = "v0.40.6";
+    hash = "sha256-60diMTawrIlyB29GrYcRuv5RBawGxpW82FHYWmHQgbg=";
+  };
+in
+
 {
   home.username = username;
   home.homeDirectory = "/Users/${username}";
@@ -41,11 +51,8 @@
     # JavaScript and TypeScript
     bun
     deno
-    nodejs_22
-    pnpm
     typescript
     typescript-language-server
-    yarn
 
     # Python
     pyright
@@ -62,6 +69,11 @@
   ];
 
   programs.home-manager.enable = true;
+
+  home.sessionPath = [
+    "/opt/homebrew/opt/postgresql@16/bin"
+    "/opt/homebrew/share/google-cloud-sdk/bin"
+  ];
 
   programs.git = {
     enable = true;
@@ -102,8 +114,29 @@
 
       export ZSH="$HOME/dotfiles/oh-my-zsh"
       export ZSH_CUSTOM="$HOME/dotfiles/zsh/zsh-custom"
-      export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin:$PATH"
-      export NPM_CONFIG_PREFIX="$HOME/.npm-global"
+      export PATH="$HOME/.local/bin:/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin:$PATH"
+      export NVM_DIR="$HOME/.nvm"
+
+      source "${nvmSource}/nvm.sh"
+
+      autoload -U add-zsh-hook
+      load-nvmrc() {
+        local nvmrc_path="$(nvm_find_nvmrc)"
+
+        if [ -n "$nvmrc_path" ]; then
+          local requested_version="$(nvm version "$(cat "$nvmrc_path")")"
+          if [ "$requested_version" = "N/A" ]; then
+            nvm install
+            corepack enable
+          elif [ "$requested_version" != "$(nvm version)" ]; then
+            nvm use
+          fi
+        elif [ "$(nvm version)" != "$(nvm version default)" ]; then
+          nvm use default
+        fi
+      }
+      add-zsh-hook chpwd load-nvmrc
+      load-nvmrc
 
       if [ -d "$ZSH" ]; then
         plugins=(git)
@@ -125,13 +158,24 @@
     enableZshIntegration = true;
   };
 
-  home.activation.installOpenAICodexCli = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    export NPM_CONFIG_PREFIX="$HOME/.npm-global"
-    export PATH="$NPM_CONFIG_PREFIX/bin:${pkgs.nodejs_22}/bin:$PATH"
-    mkdir -p "$NPM_CONFIG_PREFIX"
+  home.activation.installNodeToolchain = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    export NVM_DIR="$HOME/.nvm"
+    mkdir -p "$NVM_DIR"
+    source "${nvmSource}/nvm.sh"
+
+    nvm install "${nodeDefaultVersion}"
+    nvm alias default "${nodeDefaultVersion}"
+    nvm use --silent default
+    corepack enable
+  '';
+
+  home.activation.installOpenAICodexCli = lib.hm.dag.entryAfter [ "installNodeToolchain" ] ''
+    export NVM_DIR="$HOME/.nvm"
+    source "${nvmSource}/nvm.sh"
+    nvm use --silent default
 
     if ! command -v codex >/dev/null 2>&1; then
-      ${pkgs.nodejs_22}/bin/npm install -g @openai/codex
+      npm install -g @openai/codex
     fi
   '';
 

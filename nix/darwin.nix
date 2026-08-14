@@ -37,8 +37,10 @@
       cleanup = "none";
     };
     brews = [
+      "cloud-sql-proxy"
       "felixkratz/formulae/borders"
       "git"
+      "postgresql@16"
       "felixkratz/formulae/sketchybar"
       "starship"
       "zsh-autosuggestions"
@@ -47,13 +49,16 @@
     casks = [
       "bruno"
       "codex"
+      "docker-desktop"
       "ghostty"
+      "gcloud-cli"
       "emacs-app"
       "font-caskaydia-cove-nerd-font"
       "font-fira-mono-nerd-font"
       "font-iosevka-term-nerd-font"
       "font-jetbrains-mono-nerd-font"
       "nikitabobko/tap/aerospace"
+      "tableplus"
     ];
   };
 
