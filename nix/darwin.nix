@@ -1,4 +1,4 @@
-{ config, pkgs, username, ... }:
+{ config, pkgs, username, profile, ... }:
 
 {
   nix.enable = false;
@@ -49,7 +49,7 @@
     casks = [
       "bruno"
       "codex"
-      "docker-desktop"
+      (if profile == "personal" then "orbstack" else "docker-desktop")
       "ghostty"
       "gcloud-cli"
       "emacs-app"

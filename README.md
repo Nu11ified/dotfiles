@@ -77,20 +77,32 @@ dots-update work
 
 ## Project Development Tools
 
-The Nix configuration installs Docker Desktop, PostgreSQL 16 client tools,
-Google Cloud CLI, Cloud SQL Auth Proxy, and TablePlus. PostgreSQL is not started
-as a Homebrew service because project databases run in Docker.
+The Nix configuration installs a Docker-compatible container backend,
+PostgreSQL 16 client tools, Google Cloud CLI, Cloud SQL Auth Proxy, and
+TablePlus. PostgreSQL is not started as a Homebrew service because project
+databases run in containers.
+
+The `personal` profile uses OrbStack, which is compatible with the Docker CLI
+and preserves the existing local containers and volumes. The `work` profile
+installs Docker Desktop. Container data is local to each backend and is not
+automatically migrated between them.
 
 NVM is pinned by Nix and installs Node 22.23.2 as the default. Entering a
 directory with an `.nvmrc` automatically installs and selects that project's
 requested Node version. Corepack supplies the Yarn version pinned by the
 project's `package.json`.
 
-After the first install, launch Docker Desktop once and complete its macOS
-setup. Google Cloud authentication is also intentionally per-user:
+After the first install, launch the configured container backend once and
+complete its macOS setup. Google Cloud authentication is also intentionally
+per-user:
 
 ```sh
+# personal profile
+open -a OrbStack
+
+# work profile
 open -a Docker
+
 gcloud init
 gcloud auth application-default login
 ```
