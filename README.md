@@ -139,6 +139,11 @@ git push
 `dotfiles-install` and `dotfiles-update` initialize submodules at the exact
 revision recorded by the parent repository.
 
+The scripts preserve a submodule when it has uncommitted files, a checked-out
+branch at another revision, or divergent local commits. They continue applying
+the rest of the dotfiles and print both the local and pinned revisions instead
+of overwriting in-progress work.
+
 ## Keyboard Guide
 
 Home Manager links the guide to:

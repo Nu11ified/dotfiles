@@ -87,8 +87,7 @@ fi
 
 cd "$dotfiles_dir"
 
-git submodule sync --recursive
-git submodule update --init --recursive
+"$dotfiles_dir/scripts/update-submodules" "$dotfiles_dir"
 
 source_nix
 

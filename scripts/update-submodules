@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root="${1:-.}"
+
+short_revision() {
+  printf '%.12s' "$1"
+}
+
+update_repo_submodules() {
+  local repo="$1"
+  local config="$repo/.gitmodules"
+
+  if [ ! -f "$config" ]; then
+    return
+  fi
+
+  git -C "$repo" submodule sync
+
+  while read -r _ path; do
+    local checkout="$repo/$path"
+    local target
+    local current
+    local branch
+    local reason=""
+
+    target="$(git -C "$repo" ls-tree HEAD -- "$path" | awk '$1 == "160000" { print $3 }')"
+    if [ -z "$target" ]; then
+      echo "Skipping '$checkout': no gitlink exists at the pinned revision."
+      continue
+    fi
+
+    if ! git -C "$checkout" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+      git -C "$repo" submodule update --init -- "$path"
+      update_repo_submodules "$checkout"
+      continue
+    fi
+
+    current="$(git -C "$checkout" rev-parse HEAD)"
+    branch="$(git -C "$checkout" symbolic-ref --quiet --short HEAD || true)"
+
+    if [ -n "$(git -C "$checkout" status --porcelain --untracked-files=normal)" ]; then
+      reason="uncommitted changes"
+    elif [ -n "$branch" ] && [ "$current" != "$target" ]; then
+      reason="branch '$branch' is checked out"
+    elif [ "$current" != "$target" ]; then
+      if ! git -C "$checkout" cat-file -e "$target^{commit}" 2>/dev/null; then
+        if ! git -C "$checkout" fetch --quiet origin "$target"; then
+          reason="the pinned revision could not be fetched"
+        fi
+      fi
+      if [ -z "$reason" ] && ! git -C "$checkout" merge-base --is-ancestor "$current" "$target"; then
+        reason="the checkout contains commits outside the pinned history"
+      fi
+    fi
+
+    if [ -n "$reason" ]; then
+      echo "Preserving submodule '$checkout' ($reason)."
+      echo "  checkout: $(short_revision "$current")"
+      echo "  pinned:   $(short_revision "$target")"
+      continue
+    fi
+
+    if [ "$current" != "$target" ]; then
+      git -C "$repo" submodule update --init -- "$path"
+    fi
+
+    update_repo_submodules "$checkout"
+  done < <(git -C "$repo" config --file .gitmodules --get-regexp '^submodule\..*\.path$' || true)
+}
+
+update_repo_submodules "$root"

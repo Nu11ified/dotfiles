@@ -89,8 +89,7 @@ if ! command -v nix >/dev/null 2>&1; then
 fi
 
 git pull --ff-only
-git submodule sync --recursive
-git submodule update --init --recursive
+"$dotfiles_dir/scripts/update-submodules" "$dotfiles_dir"
 run_darwin_switch
 
 if command -v aerospace >/dev/null 2>&1; then
