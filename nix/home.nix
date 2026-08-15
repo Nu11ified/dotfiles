@@ -159,7 +159,9 @@ in
   };
 
   home.activation.installNodeToolchain = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    export PATH="$PATH:/usr/bin:/bin:/usr/sbin:/sbin"
     export NVM_DIR="$HOME/.nvm"
+    unset NPM_CONFIG_PREFIX npm_config_prefix
     mkdir -p "$NVM_DIR"
     source "${nvmSource}/nvm.sh"
 
@@ -170,7 +172,9 @@ in
   '';
 
   home.activation.installOpenAICodexCli = lib.hm.dag.entryAfter [ "installNodeToolchain" ] ''
+    export PATH="$PATH:/usr/bin:/bin:/usr/sbin:/sbin"
     export NVM_DIR="$HOME/.nvm"
+    unset NPM_CONFIG_PREFIX npm_config_prefix
     source "${nvmSource}/nvm.sh"
     nvm use --silent default
 

@@ -31,6 +31,7 @@ sketchybar --default \
   padding_right=6
 
 sketchybar --add event aerospace_workspace_change
+sketchybar --add event aerospace_focus_change
 sketchybar --add event aerospace_state_change
 sketchybar --remove '/space\..*/'
 
@@ -52,34 +53,40 @@ sketchybar --add item aerospace.toggle right \
 add_workspace() {
   local item="$1"
   local number="$2"
-  local icon="$3"
-  local position="$4"
+  local position="$3"
 
   sketchybar --add item "space.$item" "$position" \
     --set "space.$item" \
-      icon="$number:$icon" \
-      label.drawing=off \
+      icon="$number" \
+      icon.padding_right=2 \
+      label="·" \
+      label.drawing=on \
+      label.font="JetBrainsMono Nerd Font:Regular:14.0" \
+      label.width=18 \
+      label.align=center \
+      label.padding_left=0 \
+      label.padding_right=2 \
       click_script="$PLUGIN_DIR/aerospace_toggle.sh workspace $item" \
       background.color=0x33222222 \
       background.border_width=1 \
       background.border_color=0x00333333
 }
 
-add_workspace 1 1 "󰖟" left
-add_workspace 2 2 "" left
-add_workspace 3 3 "󰚩" left
-add_workspace 4 4 "󰨞" left
-add_workspace 5 5 "󰍡" left
-add_workspace 6 6 "󰘔" left
-add_workspace 7 7 "󰘔" left
-add_workspace 8 8 "󰘔" left
-add_workspace 9 9 "󰘔" left
+add_workspace 1 1 left
+add_workspace 2 2 left
+add_workspace 3 3 left
+add_workspace 4 4 left
+add_workspace 5 5 left
+add_workspace 6 6 left
+add_workspace 7 7 left
+add_workspace 8 8 left
+add_workspace 9 9 left
 
 sketchybar --add item aerospace.workspaces left \
   --set aerospace.workspaces \
     drawing=off \
     script="$PLUGIN_DIR/aerospace_workspaces.sh" \
-  --subscribe aerospace.workspaces aerospace_workspace_change aerospace_state_change display_change system_woke
+  --subscribe aerospace.workspaces aerospace_workspace_change aerospace_focus_change aerospace_state_change display_change system_woke
 
 sketchybar --add item front_app left \
   --set front_app \

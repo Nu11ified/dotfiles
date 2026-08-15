@@ -186,7 +186,9 @@ The monitor assignment script identifies displays by AeroSpace's main-display
 flag rather than hardware names, so it works with arbitrary external monitors.
 Missing external displays fall back to the main display. SketchyBar shows each
 workspace only on its assigned monitor: white is focused and pink is visible
-on another monitor. Use `Option-Control-Arrow` to focus a monitor,
+on another monitor. Each workspace shows the icon of its most recently focused
+application; the icon does not assign that application to the workspace. Use
+`Option-Control-Arrow` to focus a monitor,
 `Option-Control-Shift-Arrow` to move a window there, and `Option-Control-Tab`
 to cycle monitor focus.
 
