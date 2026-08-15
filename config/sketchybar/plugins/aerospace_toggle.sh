@@ -54,6 +54,7 @@ case "$action" in
 esac
 
 if [ "$state" = "on" ]; then
+  "$HOME/.config/aerospace/scripts/arrange-monitors" || true
   enabled=1
   focused="$(aerospace list-workspaces --focused 2>/dev/null || true)"
   sketchybar --set aerospace.toggle \

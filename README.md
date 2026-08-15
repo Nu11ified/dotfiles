@@ -168,18 +168,31 @@ Inside Emacs, open it with `C-c ?`.
 
 ## Workspace Map
 
-| Key | Workspace | App shortcut |
-| --- | --- | --- |
-| `Option-1` | Zen | `Option-b` opens a new Zen window |
-| `Option-2` | Terminals and Emacs | `Option-Enter` opens a new Ghostty window |
-| `Option-3` | Codex and Claude | `Option-a` opens Codex |
-| `Option-4` | Cursor and VS Code | `Option-c` opens Cursor |
-| `Option-5` | Messages and Discord | `Option-i` opens Messages |
-| `Option-6..9` | Miscellaneous | no automatic app assignment |
+| Keys | Display |
+| --- | --- |
+| `Option-1..5` | Main display |
+| `Option-6..7` | First connected external display |
+| `Option-8..9` | Second connected external display |
+
+No application is automatically assigned to a workspace. App-launch shortcuts
+open on whichever workspace is currently focused, and
+`Option-Shift-1..9` explicitly moves a window when needed.
 
 SketchyBar subscribes to an `aerospace_workspace_change` event triggered by
 AeroSpace's `exec-on-workspace-change` callback, so the top bar shows the active
 AeroSpace workspace instead of relying on macOS Spaces.
+
+The monitor assignment script identifies displays by AeroSpace's main-display
+flag rather than hardware names, so it works with arbitrary external monitors.
+Missing external displays fall back to the main display. SketchyBar shows each
+workspace only on its assigned monitor: white is focused and pink is visible
+on another monitor. Use `Option-Control-Arrow` to focus a monitor,
+`Option-Control-Shift-Arrow` to move a window there, and `Option-Control-Tab`
+to cycle monitor focus.
+
+The system disables macOS "Displays have separate Spaces" for AeroSpace
+stability. Log out once after first applying that setting. Display-change events
+are debounced so reconnecting a dock does not repeatedly rebuild the bar.
 
 Click the power button left of the clock in SketchyBar to release or restore
 AeroSpace window management. Workspace buttons dim while AeroSpace is disabled
@@ -196,8 +209,9 @@ windows, and `Option-Shift-h/j/k/l` to reorder them.
 - `nix/darwin.nix`: macOS defaults, packages, Homebrew apps, fonts.
 - `nix/home.nix`: user dotfiles, shell, Git, Emacs, app configs.
 - `config/aerospace/aerospace.toml`: tiling/window/workspace shortcuts.
-- `config/aerospace/scripts/open-workspace`: launch apps into named workspaces.
+- `config/aerospace/scripts/open-app`: launch apps on the current workspace.
+- `config/aerospace/scripts/arrange-monitors`: assign workspace groups to connected displays.
 - `config/sketchybar/sketchybarrc`: dark top bar.
-- `config/sketchybar/plugins/aerospace.sh`: workspace status for SketchyBar.
+- `config/sketchybar/plugins/aerospace_workspaces.sh`: workspace status and display placement for SketchyBar.
 - `config/borders/bordersrc`: focused-window borders.
 - `emacs/`: pinned submodule for the standalone Emacs configuration.

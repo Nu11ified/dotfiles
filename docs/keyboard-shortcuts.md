@@ -8,19 +8,16 @@
 | `Option-Shift-h/j/k/l` | Swap focused window left/down/up/right |
 | `Option-Tab` / `Option-Shift-Tab` | Cycle through windows forward/backward |
 | `Option-Space` | Toggle the two most recently focused windows/workspaces |
-| `Option-1` | Zen workspace |
-| `Option-2` | Ghostty, Terminal, Termius, and Emacs workspace |
-| `Option-3` | Codex and Claude workspace |
-| `Option-4` | Cursor and VS Code workspace |
-| `Option-5` | Messages and Discord workspace |
-| `Option-6..9` | Unassigned misc workspaces |
+| `Option-1..5` | Switch to a workspace on the main display |
+| `Option-6..7` | Switch to a workspace on the first external display |
+| `Option-8..9` | Switch to a workspace on the second external display |
 | `Option-Shift-1..9` | Move window to matching workspace |
-| `Option-b` | Open a new Zen window in workspace 1 |
-| `Option-Enter` | Open a new Ghostty window in workspace 2 |
-| `Option-u` / `Option-e` | Open Termius / Emacs in workspace 2 |
-| `Option-a` | Open Codex in workspace 3 |
-| `Option-c` / `Option-v` | Open Cursor / VS Code in workspace 4 |
-| `Option-i` / `Option-d` | Open Messages / Discord in workspace 5 |
+| `Option-b` | Open a new Zen window on the current workspace |
+| `Option-Enter` | Open a new Ghostty window on the current workspace |
+| `Option-u` / `Option-e` | Open Termius / Emacs on the current workspace |
+| `Option-a` | Open Codex on the current workspace |
+| `Option-c` / `Option-v` | Open Cursor / VS Code on the current workspace |
+| `Option-i` / `Option-d` | Open Messages / Discord on the current workspace |
 | `Option-w` | Toggle previous workspace |
 | `Option-0` | Rebalance all tiled windows |
 | `Option-Shift-0` | Reset and rebalance the workspace layout |
@@ -29,6 +26,9 @@
 | `Option-\\` | Toggle tile orientation |
 | `Option-Shift-v` | Toggle accordion/tiles |
 | `Option-Control-h/j/k/l` | Join focused window with neighbor |
+| `Option-Control-Arrow` | Focus the monitor in that direction |
+| `Option-Control-Shift-Arrow` | Move the focused window to that monitor |
+| `Option-Control-Tab` | Focus the next monitor |
 | `Option-s` | Vertical accordion layout |
 | `Option-f` | Fullscreen focused window |
 | `Option-Shift-Space` | Toggle floating/tiling |

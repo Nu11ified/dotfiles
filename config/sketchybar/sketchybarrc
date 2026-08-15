@@ -60,11 +60,9 @@ add_workspace() {
       icon="$number:$icon" \
       label.drawing=off \
       click_script="$PLUGIN_DIR/aerospace_toggle.sh workspace $item" \
-      script="$PLUGIN_DIR/aerospace.sh $item" \
       background.color=0x33222222 \
       background.border_width=1 \
-      background.border_color=0x00333333 \
-    --subscribe "space.$item" aerospace_workspace_change aerospace_state_change
+      background.border_color=0x00333333
 }
 
 add_workspace 1 1 "󰖟" left
@@ -77,8 +75,15 @@ add_workspace 7 7 "󰘔" left
 add_workspace 8 8 "󰘔" left
 add_workspace 9 9 "󰘔" left
 
+sketchybar --add item aerospace.workspaces left \
+  --set aerospace.workspaces \
+    drawing=off \
+    script="$PLUGIN_DIR/aerospace_workspaces.sh" \
+  --subscribe aerospace.workspaces aerospace_workspace_change aerospace_state_change display_change system_woke
+
 sketchybar --add item front_app left \
   --set front_app \
+    display=active \
     icon="󰣇" \
     label="..." \
     label.width=110 \
@@ -120,4 +125,5 @@ sketchybar --add item clock right \
 sketchybar --move aerospace.toggle after clock
 
 "$PLUGIN_DIR/aerospace_toggle.sh" refresh
+sketchybar --trigger aerospace_workspace_change
 sketchybar --update

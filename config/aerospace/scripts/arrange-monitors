@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v aerospace >/dev/null 2>&1; then
+  exit 0
+fi
+
+monitors="$(aerospace list-monitors --format '%{monitor-id}|%{monitor-is-main}' 2>/dev/null || true)"
+main_monitor="$(printf '%s\n' "$monitors" | awk -F '|' '$2 == "true" { print $1; exit }')"
+
+if [ -z "$main_monitor" ]; then
+  exit 0
+fi
+
+original_workspace="$(aerospace list-workspaces --focused 2>/dev/null || true)"
+
+# Start with every managed workspace on the main display. Missing external
+# displays therefore fall back cleanly instead of making workspaces unreachable.
+for workspace in 1 2 3 4 5 6 7 8 9; do
+  aerospace move-workspace-to-monitor --workspace "$workspace" "$main_monitor" >/dev/null 2>&1 || true
+done
+
+external_index=0
+while IFS='|' read -r monitor_id is_main; do
+  if [ -z "$monitor_id" ] || [ "$is_main" = "true" ]; then
+    continue
+  fi
+
+  case "$external_index" in
+    0) workspaces="6 7"; visible_workspace=6 ;;
+    1) workspaces="8 9"; visible_workspace=8 ;;
+    *) break ;;
+  esac
+
+  for workspace in $workspaces; do
+    aerospace move-workspace-to-monitor --workspace "$workspace" "$monitor_id" >/dev/null 2>&1 || true
+  done
+  aerospace workspace "$visible_workspace" >/dev/null 2>&1 || true
+  external_index=$((external_index + 1))
+done <<< "$monitors"
+
+if [ -n "$original_workspace" ]; then
+  aerospace workspace "$original_workspace" >/dev/null 2>&1 || true
+fi
+
+if command -v sketchybar >/dev/null 2>&1; then
+  sketchybar --trigger aerospace_workspace_change >/dev/null 2>&1 || true
+fi

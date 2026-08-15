@@ -213,22 +213,22 @@ in
       "${config.home.homeDirectory}/dotfiles/config/aerospace/aerospace.toml";
     force = true;
   };
-  home.file.".config/aerospace/scripts/open-workspace" = {
+  home.file.".config/aerospace/scripts/open-app" = {
     source = config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/dotfiles/config/aerospace/scripts/open-workspace";
+      "${config.home.homeDirectory}/dotfiles/config/aerospace/scripts/open-app";
     force = true;
   };
-  home.file.".config/aerospace/scripts/sync-app-workspaces" = {
+  home.file.".config/aerospace/scripts/arrange-monitors" = {
     source = config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/dotfiles/config/aerospace/scripts/sync-app-workspaces";
+      "${config.home.homeDirectory}/dotfiles/config/aerospace/scripts/arrange-monitors";
     force = true;
   };
   home.file.".config/sketchybar/sketchybarrc" = {
     source = ../config/sketchybar/sketchybarrc;
     executable = true;
   };
-  home.file.".config/sketchybar/plugins/aerospace.sh" = {
-    source = ../config/sketchybar/plugins/aerospace.sh;
+  home.file.".config/sketchybar/plugins/aerospace_workspaces.sh" = {
+    source = ../config/sketchybar/plugins/aerospace_workspaces.sh;
     executable = true;
   };
   home.file.".config/sketchybar/plugins/aerospace_toggle.sh" = {

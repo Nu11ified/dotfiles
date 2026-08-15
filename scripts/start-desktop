@@ -5,12 +5,12 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:/run/current-system/sw/bin:/etc/pr
 
 dotfiles_dir="${DOTFILES_DIR:-$HOME/dotfiles}"
 sketchybar_config="$HOME/.config/sketchybar/sketchybarrc"
-aerospace_sync="$HOME/.config/aerospace/scripts/sync-app-workspaces"
+aerospace_arrange="$HOME/.config/aerospace/scripts/arrange-monitors"
 if [ -f "$dotfiles_dir/config/sketchybar/sketchybarrc" ]; then
   sketchybar_config="$dotfiles_dir/config/sketchybar/sketchybarrc"
 fi
-if [ -x "$dotfiles_dir/config/aerospace/scripts/sync-app-workspaces" ]; then
-  aerospace_sync="$dotfiles_dir/config/aerospace/scripts/sync-app-workspaces"
+if [ -x "$dotfiles_dir/config/aerospace/scripts/arrange-monitors" ]; then
+  aerospace_arrange="$dotfiles_dir/config/aerospace/scripts/arrange-monitors"
 fi
 
 defaults write NSGlobalDomain _HIHideMenuBar -bool true || true
@@ -24,7 +24,7 @@ if command -v aerospace >/dev/null 2>&1; then
   open -gj -a AeroSpace || true
   sleep 1
   aerospace reload-config || true
-  "$aerospace_sync" || true
+  "$aerospace_arrange" || true
 fi
 
 pkill -x spacebar 2>/dev/null || true

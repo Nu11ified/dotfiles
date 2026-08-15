@@ -81,6 +81,7 @@
     NSGlobalDomain.ApplePressAndHoldEnabled = false;
     NSGlobalDomain.KeyRepeat = 2;
     NSGlobalDomain.InitialKeyRepeat = 15;
+    spaces.spans-displays = true;
     universalaccess.reduceTransparency = true;
   };
 
