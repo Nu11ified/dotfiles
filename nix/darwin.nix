@@ -69,6 +69,9 @@
       /usr/bin/sudo --user=${username} --set-home "$brew" trust --formula felixkratz/formulae/sketchybar >/dev/null
       /usr/bin/sudo --user=${username} --set-home "$brew" trust --cask nikitabobko/tap/aerospace >/dev/null
     fi
+
+    # Keep the Mac awake on wall power while still allowing display sleep.
+    /usr/bin/pmset -c sleep 0
   '';
 
   system.defaults = {
