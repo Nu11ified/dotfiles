@@ -4,6 +4,9 @@ set -euo pipefail
 state_file="${XDG_STATE_HOME:-$HOME/.local/state}/aerospace/enabled"
 workspace_state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/sketchybar/workspaces"
 args=()
+refresh_apps="${FULL_REFRESH:-0}"
+focused_workspace=""
+focused_app=""
 
 app_icon() {
   case "$1" in
@@ -23,6 +26,7 @@ app_icon() {
 if [ "${SENDER:-}" = "display_change" ] || [ "${SENDER:-}" = "system_woke" ]; then
   sleep 0.8
   "$HOME/.config/aerospace/scripts/arrange-monitors" || true
+  refresh_apps=1
 fi
 
 if [ -r "$state_file" ] && [ "$(cat "$state_file")" = "off" ]; then
@@ -39,18 +43,6 @@ if [ -r "$state_file" ] && [ "$(cat "$state_file")" = "off" ]; then
   exit 0
 fi
 
-workspace_state="$(
-  aerospace list-workspaces --all \
-    --format '%{workspace}|%{workspace-is-focused}|%{workspace-is-visible}|%{monitor-appkit-nsscreen-screens-id}' \
-    2>/dev/null || true
-)"
-
-window_state="$(
-  aerospace list-windows --all \
-    --format '%{workspace}|%{window-id}|%{app-name}' \
-    2>/dev/null || true
-)"
-
 if [ "${SENDER:-}" = "aerospace_focus_change" ]; then
   focused_window="$(aerospace list-windows --focused --format '%{workspace}|%{app-name}' 2>/dev/null || true)"
   focused_workspace="${focused_window%%|*}"
@@ -60,9 +52,32 @@ if [ "${SENDER:-}" = "aerospace_focus_change" ]; then
       if [ -n "$focused_app" ]; then
         mkdir -p "$workspace_state_dir"
         printf '%s\n' "$focused_app" > "$workspace_state_dir/$focused_workspace"
+        sketchybar --set "space.$focused_workspace" \
+          label="$(app_icon "$focused_app")" \
+          label.drawing=on \
+          background.color=0xffffffff \
+          background.border_color=0xffffffff \
+          icon.color=0xff111111 \
+          label.color=0xff111111
       fi
       ;;
   esac
+  exit 0
+fi
+
+workspace_state="$(
+  aerospace list-workspaces --all \
+    --format '%{workspace}|%{workspace-is-focused}|%{workspace-is-visible}|%{monitor-appkit-nsscreen-screens-id}' \
+    2>/dev/null || true
+)"
+
+window_state=""
+if [ "$refresh_apps" = "1" ]; then
+  window_state="$(
+    aerospace list-windows --all \
+      --format '%{workspace}|%{window-id}|%{app-name}' \
+      2>/dev/null || true
+  )"
 fi
 
 while IFS='|' read -r workspace focused visible display_id; do
@@ -73,17 +88,19 @@ while IFS='|' read -r workspace focused visible display_id; do
 
   args+=(--set "space.$workspace")
 
-  last_app=""
-  if [ -r "$workspace_state_dir/$workspace" ]; then
-    last_app="$(cat "$workspace_state_dir/$workspace")"
-  fi
-  if [ -z "$last_app" ] || ! printf '%s\n' "$window_state" | awk -F '|' -v workspace="$workspace" -v app="$last_app" '$1 == workspace && $3 == app { found=1 } END { exit !found }'; then
-    last_app="$(printf '%s\n' "$window_state" | awk -F '|' -v workspace="$workspace" '$1 == workspace { print $3; exit }')"
-  fi
-  if [ -n "$last_app" ]; then
-    args+=(label="$(app_icon "$last_app")" label.drawing=on)
-  else
-    args+=(label="·" label.drawing=on)
+  if [ "$refresh_apps" = "1" ]; then
+    last_app=""
+    if [ -r "$workspace_state_dir/$workspace" ]; then
+      last_app="$(cat "$workspace_state_dir/$workspace")"
+    fi
+    if [ -z "$last_app" ] || ! printf '%s\n' "$window_state" | awk -F '|' -v workspace="$workspace" -v app="$last_app" '$1 == workspace && $3 == app { found=1 } END { exit !found }'; then
+      last_app="$(printf '%s\n' "$window_state" | awk -F '|' -v workspace="$workspace" '$1 == workspace { print $3; exit }')"
+    fi
+    if [ -n "$last_app" ]; then
+      args+=(label="$(app_icon "$last_app")" label.drawing=on)
+    else
+      args+=(label="·" label.drawing=on)
+    fi
   fi
 
   if [ -n "$display_id" ]; then

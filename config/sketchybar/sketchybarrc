@@ -85,6 +85,7 @@ add_workspace 9 9 left
 sketchybar --add item aerospace.workspaces left \
   --set aerospace.workspaces \
     drawing=off \
+    updates=on \
     script="$PLUGIN_DIR/aerospace_workspaces.sh" \
   --subscribe aerospace.workspaces aerospace_workspace_change aerospace_focus_change aerospace_state_change display_change system_woke
 
@@ -95,7 +96,6 @@ sketchybar --add item front_app left \
     label="..." \
     label.width=110 \
     scroll_texts=on \
-    update_freq=10 \
     script="$PLUGIN_DIR/front_app.sh" \
     background.color=0x33222222 \
   --subscribe front_app front_app_switched
@@ -132,5 +132,5 @@ sketchybar --add item clock right \
 sketchybar --move aerospace.toggle after clock
 
 "$PLUGIN_DIR/aerospace_toggle.sh" refresh
-sketchybar --trigger aerospace_workspace_change
+sketchybar --trigger aerospace_workspace_change FULL_REFRESH=1
 sketchybar --update

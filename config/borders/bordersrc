@@ -3,7 +3,7 @@ set -euo pipefail
 
 exec borders \
   style=round \
-  width=5.0 \
+  width=3.5 \
   hidpi=on \
-  active_color=0xffffffff \
+  active_color=0xfff5c2e7 \
   inactive_color=0x00ffffff

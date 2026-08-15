@@ -4,6 +4,7 @@ set -euo pipefail
 action="${1:-refresh}"
 state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/aerospace"
 state_file="$state_dir/enabled"
+should_arrange=0
 
 read_state() {
   if [ -r "$state_file" ] && [ "$(cat "$state_file")" = "off" ]; then
@@ -25,12 +26,14 @@ case "$action" in
     else
       aerospace enable on >/dev/null
       state="on"
+      should_arrange=1
     fi
     write_state "$state"
     ;;
   on)
     aerospace enable on >/dev/null 2>&1 || true
     state="on"
+    should_arrange=1
     write_state "$state"
     ;;
   restore)
@@ -54,7 +57,9 @@ case "$action" in
 esac
 
 if [ "$state" = "on" ]; then
-  "$HOME/.config/aerospace/scripts/arrange-monitors" || true
+  if [ "$should_arrange" -eq 1 ]; then
+    "$HOME/.config/aerospace/scripts/arrange-monitors" || true
+  fi
   enabled=1
   focused="$(aerospace list-workspaces --focused 2>/dev/null || true)"
   sketchybar --set aerospace.toggle \

@@ -28,23 +28,29 @@ if command -v aerospace >/dev/null 2>&1; then
 fi
 
 pkill -x spacebar 2>/dev/null || true
-pkill -x borders 2>/dev/null || true
 
 if command -v sketchybar >/dev/null 2>&1; then
   if command -v brew >/dev/null 2>&1; then
     brew services start sketchybar >/tmp/sketchybar-service.log 2>&1 || true
   fi
-  sketchybar --reload >/tmp/sketchybar.log 2>&1 || nohup sketchybar >/tmp/sketchybar.log 2>&1 &
-  sleep 1
-  bash "$sketchybar_config" >>/tmp/sketchybar.log 2>&1 || true
+  if ! sketchybar --reload "$sketchybar_config" >/tmp/sketchybar.log 2>&1; then
+    nohup sketchybar --config "$sketchybar_config" >/tmp/sketchybar.log 2>&1 &
+  fi
+  sleep 0.5
   "$HOME/.config/sketchybar/plugins/aerospace_toggle.sh" restore || true
 fi
 
 if command -v borders >/dev/null 2>&1; then
-  if [ -x "$HOME/.config/borders/bordersrc" ]; then
-    nohup "$HOME/.config/borders/bordersrc" >/tmp/borders.log 2>&1 &
+  if command -v brew >/dev/null 2>&1; then
+    brew services start borders >/tmp/borders-service.log 2>&1 || true
+    sleep 0.5
+  fi
+  if pgrep -x borders >/dev/null 2>&1; then
+    "$HOME/.config/borders/bordersrc" >/tmp/borders.log 2>&1 || true
+  elif [ -x "$HOME/.config/borders/bordersrc" ]; then
+    nohup "$HOME/.config/borders/bordersrc" >/tmp/borders.log 2>&1 </dev/null &
   else
-    nohup borders active_color=0xffffffff inactive_color=0x00ffffff width=5.0 hidpi=on style=round >/tmp/borders.log 2>&1 &
+    nohup borders active_color=0xfff5c2e7 inactive_color=0x00ffffff width=3.5 hidpi=on style=round >/tmp/borders.log 2>&1 </dev/null &
   fi
 fi
 

@@ -15,7 +15,7 @@ after-startup-command = [
 exec-on-workspace-change = [
   '/bin/bash',
   '-c',
-  'sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE',
+  'focused="$AEROSPACE_FOCUSED_WORKSPACE"; sketchybar --set "space.$focused" background.color=0xffffffff background.border_color=0xffffffff icon.color=0xff111111 label.color=0xff111111; sketchybar --trigger aerospace_workspace_change FOCUSED="$focused"',
 ]
 
 on-focus-changed = [
@@ -34,7 +34,7 @@ inner.horizontal = 8
 inner.vertical = 8
 outer.left = 10
 outer.bottom = 10
-outer.top = 16
+outer.top = 28
 outer.right = 10
 
 [mode.main.binding]
