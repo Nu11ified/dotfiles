@@ -116,6 +116,7 @@ in
       export ZSH_CUSTOM="$HOME/dotfiles/zsh/zsh-custom"
       export PATH="$HOME/.local/bin:/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin:$PATH"
       export NVM_DIR="$HOME/.nvm"
+      unset NPM_CONFIG_PREFIX npm_config_prefix
 
       source "${nvmSource}/nvm.sh"
 
