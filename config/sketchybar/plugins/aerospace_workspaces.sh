@@ -24,7 +24,6 @@ app_icon() {
 }
 
 if [ "${SENDER:-}" = "display_change" ] || [ "${SENDER:-}" = "system_woke" ]; then
-  sleep 0.8
   "$HOME/.config/aerospace/scripts/arrange-monitors" || true
   refresh_apps=1
 fi
