@@ -19,3 +19,4 @@ alias showmac='pkill -x sketchybar 2>/dev/null; pkill -x borders 2>/dev/null; de
 alias jankyon='pkill -x borders 2>/dev/null; borders active_color=0xffffffff inactive_color=0x00ffffff width=5.0 style=round hidpi=on >/tmp/borders.log 2>&1 &'
 alias jankyoff='pkill -x borders 2>/dev/null'
 alias as='cat ~/.config/keyboard-shortcuts.md'
+export PATH="/opt/homebrew/opt/node@22/bin:/opt/homebrew/opt/postgresql@16/bin:$PATH"
