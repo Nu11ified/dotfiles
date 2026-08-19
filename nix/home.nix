@@ -118,6 +118,10 @@ in
       export NVM_DIR="$HOME/.nvm"
       unset NPM_CONFIG_PREFIX npm_config_prefix
 
+      if [ -r "$HOME/.config/zsh/secrets.zsh" ]; then
+        source "$HOME/.config/zsh/secrets.zsh"
+      fi
+
       source "${nvmSource}/nvm.sh"
 
       autoload -U add-zsh-hook
@@ -158,6 +162,18 @@ in
     enable = true;
     enableZshIntegration = true;
   };
+
+  home.activation.ensurePrivateZshSecrets = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    secrets_dir="$HOME/.config/zsh"
+    secrets_file="$secrets_dir/secrets.zsh"
+
+    /bin/mkdir -p "$secrets_dir"
+    /bin/chmod 700 "$secrets_dir"
+    if [ ! -e "$secrets_file" ]; then
+      /usr/bin/install -m 600 /dev/null "$secrets_file"
+    fi
+    /bin/chmod 600 "$secrets_file"
+  '';
 
   home.activation.installNodeToolchain = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     export PATH="$PATH:/usr/bin:/bin:/usr/sbin:/sbin"
