@@ -40,6 +40,7 @@
       "manaflow-ai/cmux"
     ];
     brews = [
+      "bitwarden-cli"
       "cloud-sql-proxy"
       "felixkratz/formulae/borders"
       "git"
