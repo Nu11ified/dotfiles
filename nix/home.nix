@@ -70,7 +70,11 @@ in
 
   programs.home-manager.enable = true;
 
+  home.sessionVariables.PNPM_HOME = "${config.home.homeDirectory}/Library/pnpm";
+
   home.sessionPath = [
+    "${config.home.homeDirectory}/Library/pnpm"
+    "${config.home.homeDirectory}/Library/pnpm/bin"
     "/opt/homebrew/opt/postgresql@16/bin"
     "/opt/homebrew/share/google-cloud-sdk/bin"
   ];
