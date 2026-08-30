@@ -243,9 +243,9 @@ in
       "${config.home.homeDirectory}/dotfiles/config/aerospace/scripts/open-app";
     force = true;
   };
-  home.file.".config/aerospace/scripts/arrange-monitors" = {
+  home.file.".config/aerospace/scripts/aerospace-query" = {
     source = config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/dotfiles/config/aerospace/scripts/arrange-monitors";
+      "${config.home.homeDirectory}/dotfiles/config/aerospace/scripts/aerospace-query";
     force = true;
   };
   home.file.".config/sketchybar/sketchybarrc" = {

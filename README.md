@@ -203,19 +203,21 @@ SketchyBar subscribes to an `aerospace_workspace_change` event triggered by
 AeroSpace's `exec-on-workspace-change` callback, so the top bar shows the active
 AeroSpace workspace instead of relying on macOS Spaces.
 
-The monitor assignment script identifies displays by AeroSpace's main-display
-flag rather than hardware names, so it works with arbitrary external monitors.
-Missing external displays fall back to the main display. SketchyBar shows each
-workspace only on its assigned monitor: white is focused and pink is visible
-on another monitor. Each workspace shows the icon of its most recently focused
-application; the icon does not assign that application to the workspace. Use
+Built-in AeroSpace assignments keep workspaces `1..5` on the main display. With
+two displays, workspaces `6..9` use the external display. With three displays,
+`6..7` use the leftmost display and `8..9` use the rightmost display; the main
+display should sit between them in macOS display arrangement. Missing external
+displays fall back to the main display. SketchyBar shows each workspace only on
+its assigned monitor: white is focused and pink is visible on another monitor.
+Each workspace shows the icon of its most recently focused application; the
+icon does not assign that application to the workspace. Use
 `Option-Control-Arrow` to focus a monitor,
 `Option-Control-Shift-Arrow` to move a window there, and `Option-Control-Tab`
 to cycle monitor focus.
 
 The system disables macOS "Displays have separate Spaces" for AeroSpace
-stability. Log out once after first applying that setting. Display-change events
-are debounced so reconnecting a dock does not repeatedly rebuild the bar.
+stability. Log out once after first applying that setting. AeroSpace owns the
+workspace-to-monitor mapping; SketchyBar only reads and displays that state.
 
 Click the power button left of the clock in SketchyBar to release or restore
 AeroSpace window management. Workspace buttons dim while AeroSpace is disabled
@@ -233,7 +235,7 @@ windows, and `Option-Shift-h/j/k/l` to reorder them.
 - `nix/home.nix`: user dotfiles, shell, Git, Emacs, app configs.
 - `config/aerospace/aerospace.toml`: tiling/window/workspace shortcuts.
 - `config/aerospace/scripts/open-app`: launch apps on the current workspace.
-- `config/aerospace/scripts/arrange-monitors`: assign workspace groups to connected displays.
+- `config/aerospace/scripts/aerospace-query`: bound status queries so a stopped AeroSpace server cannot freeze SketchyBar.
 - `config/sketchybar/sketchybarrc`: dark top bar.
 - `config/sketchybar/plugins/aerospace_workspaces.sh`: workspace status and display placement for SketchyBar.
 - `config/borders/bordersrc`: focused-window borders.

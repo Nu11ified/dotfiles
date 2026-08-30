@@ -5,12 +5,12 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:/run/current-system/sw/bin:/etc/pr
 
 dotfiles_dir="${DOTFILES_DIR:-$HOME/dotfiles}"
 sketchybar_config="$HOME/.config/sketchybar/sketchybarrc"
-aerospace_arrange="$HOME/.config/aerospace/scripts/arrange-monitors"
+aerospace_query="$HOME/.config/aerospace/scripts/aerospace-query"
 if [ -f "$dotfiles_dir/config/sketchybar/sketchybarrc" ]; then
   sketchybar_config="$dotfiles_dir/config/sketchybar/sketchybarrc"
 fi
-if [ -x "$dotfiles_dir/config/aerospace/scripts/arrange-monitors" ]; then
-  aerospace_arrange="$dotfiles_dir/config/aerospace/scripts/arrange-monitors"
+if [ -x "$dotfiles_dir/config/aerospace/scripts/aerospace-query" ]; then
+  aerospace_query="$dotfiles_dir/config/aerospace/scripts/aerospace-query"
 fi
 
 defaults write NSGlobalDomain _HIHideMenuBar -bool true || true
@@ -21,10 +21,15 @@ killall SystemUIServer 2>/dev/null || true
 killall ControlCenter 2>/dev/null || true
 
 if command -v aerospace >/dev/null 2>&1; then
+  pkill -f '/.config/sketchybar/plugins/aerospace_workspaces.sh' 2>/dev/null || true
   open -gj -a AeroSpace || true
-  sleep 1
-  aerospace reload-config || true
-  "$aerospace_arrange" || true
+  for _ in $(seq 1 30); do
+    if "$aerospace_query" list-monitors >/dev/null 2>&1; then
+      break
+    fi
+    sleep 0.1
+  done
+  aerospace reload-config
 fi
 
 pkill -x spacebar 2>/dev/null || true

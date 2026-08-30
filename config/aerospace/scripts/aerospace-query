@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -x /opt/homebrew/bin/aerospace ]; then
+  aerospace_cli=/opt/homebrew/bin/aerospace
+elif [ -x /usr/local/bin/aerospace ]; then
+  aerospace_cli=/usr/local/bin/aerospace
+else
+  exit 127
+fi
+
+timeout_seconds="${AEROSPACE_QUERY_TIMEOUT:-2}"
+exec /usr/bin/perl -e '
+  my $timeout = shift @ARGV;
+  alarm $timeout;
+  exec @ARGV;
+' "$timeout_seconds" "$aerospace_cli" "$@"

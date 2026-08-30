@@ -3,6 +3,7 @@ set -euo pipefail
 
 state_file="${XDG_STATE_HOME:-$HOME/.local/state}/aerospace/enabled"
 workspace_state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/sketchybar/workspaces"
+aerospace_query="$HOME/.config/aerospace/scripts/aerospace-query"
 args=()
 refresh_apps="${FULL_REFRESH:-0}"
 focused_workspace=""
@@ -24,7 +25,7 @@ app_icon() {
 }
 
 if [ "${SENDER:-}" = "display_change" ] || [ "${SENDER:-}" = "system_woke" ]; then
-  "$HOME/.config/aerospace/scripts/arrange-monitors" || true
+  sleep 0.25
   refresh_apps=1
 fi
 
@@ -43,7 +44,7 @@ if [ -r "$state_file" ] && [ "$(cat "$state_file")" = "off" ]; then
 fi
 
 if [ "${SENDER:-}" = "aerospace_focus_change" ]; then
-  focused_window="$(aerospace list-windows --focused --format '%{workspace}|%{app-name}' 2>/dev/null || true)"
+  focused_window="$("$aerospace_query" list-windows --focused --format '%{workspace}|%{app-name}' 2>/dev/null || true)"
   focused_workspace="${focused_window%%|*}"
   focused_app="${focused_window#*|}"
   case "$focused_workspace" in
@@ -65,15 +66,24 @@ if [ "${SENDER:-}" = "aerospace_focus_change" ]; then
 fi
 
 workspace_state="$(
-  aerospace list-workspaces --all \
+  "$aerospace_query" list-workspaces --all \
     --format '%{workspace}|%{workspace-is-focused}|%{workspace-is-visible}|%{monitor-appkit-nsscreen-screens-id}' \
+    2>/dev/null || true
+)"
+
+# AeroSpace reports the macOS DirectDisplayID, while SketchyBar's display=
+# setting expects its arrangement-id. They are not guaranteed to have the
+# same value, especially when monitors are arranged on both sides of the Mac.
+display_map="$(
+  sketchybar --query displays 2>/dev/null \
+    | /usr/bin/jq -r '.[] | "\(.DirectDisplayID)|\(."arrangement-id")"' \
     2>/dev/null || true
 )"
 
 window_state=""
 if [ "$refresh_apps" = "1" ]; then
   window_state="$(
-    aerospace list-windows --all \
+    "$aerospace_query" list-windows --all \
       --format '%{workspace}|%{window-id}|%{app-name}' \
       2>/dev/null || true
   )"
@@ -102,8 +112,13 @@ while IFS='|' read -r workspace focused visible display_id; do
     fi
   fi
 
-  if [ -n "$display_id" ]; then
-    args+=(display="$display_id")
+  sketchybar_display_id="$(
+    printf '%s\n' "$display_map" \
+      | awk -F '|' -v direct_display_id="$display_id" \
+        '$1 == direct_display_id { print $2; exit }'
+  )"
+  if [ -n "$sketchybar_display_id" ]; then
+    args+=(display="$sketchybar_display_id")
   fi
 
   if [ "$focused" = "true" ]; then

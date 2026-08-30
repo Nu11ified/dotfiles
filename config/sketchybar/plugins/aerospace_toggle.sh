@@ -4,7 +4,7 @@ set -euo pipefail
 action="${1:-refresh}"
 state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/aerospace"
 state_file="$state_dir/enabled"
-should_arrange=0
+aerospace_query="$HOME/.config/aerospace/scripts/aerospace-query"
 
 read_state() {
   if [ -r "$state_file" ] && [ "$(cat "$state_file")" = "off" ]; then
@@ -21,29 +21,27 @@ write_state() {
 
 case "$action" in
   toggle)
-    if aerospace enable off --fail-if-noop >/dev/null 2>&1; then
+    if "$aerospace_query" enable off --fail-if-noop >/dev/null 2>&1; then
       state="off"
     else
-      aerospace enable on >/dev/null
+      "$aerospace_query" enable on >/dev/null
       state="on"
-      should_arrange=1
     fi
     write_state "$state"
     ;;
   on)
-    aerospace enable on >/dev/null 2>&1 || true
+    "$aerospace_query" enable on >/dev/null 2>&1 || true
     state="on"
-    should_arrange=1
     write_state "$state"
     ;;
   restore)
     state="$(read_state)"
-    aerospace enable "$state" >/dev/null 2>&1 || true
+    "$aerospace_query" enable "$state" >/dev/null 2>&1 || true
     ;;
   workspace)
     workspace="${2:?workspace is required}"
     if [ "$(read_state)" = "on" ]; then
-      aerospace workspace "$workspace"
+      "$aerospace_query" workspace "$workspace"
     fi
     exit 0
     ;;
@@ -57,11 +55,8 @@ case "$action" in
 esac
 
 if [ "$state" = "on" ]; then
-  if [ "$should_arrange" -eq 1 ]; then
-    "$HOME/.config/aerospace/scripts/arrange-monitors" || true
-  fi
   enabled=1
-  focused="$(aerospace list-workspaces --focused 2>/dev/null || true)"
+  focused="$("$aerospace_query" list-workspaces --focused 2>/dev/null || true)"
   sketchybar --set aerospace.toggle \
     icon="󰐥" \
     icon.color=0xffa6e3a1 \
