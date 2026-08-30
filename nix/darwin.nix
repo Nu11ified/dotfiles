@@ -63,7 +63,9 @@
       "font-iosevka-term-nerd-font"
       "font-jetbrains-mono-nerd-font"
       "nikitabobko/tap/aerospace"
+      "slack"
       "tableplus"
+      "warp"
     ];
   };
 
