@@ -75,6 +75,27 @@ dots-update personal
 dots-update work
 ```
 
+## Automatic Homebrew Updates
+
+Home Manager installs a low-priority launchd agent that updates Homebrew and
+upgrades installed formulae and casks every day at 9:00 AM local time. A missed
+run starts after the Mac wakes. The updater does not run Homebrew cleanup or
+quit running applications.
+
+Run or preview the same update manually:
+
+```sh
+dotfiles-brew-update --dry-run
+dotfiles-brew-update
+```
+
+Logs are written to:
+
+```sh
+~/Library/Logs/dotfiles-brew-update.log
+~/Library/Logs/dotfiles-brew-update.error.log
+```
+
 ## Project Development Tools
 
 The Nix configuration installs a Docker-compatible container backend,

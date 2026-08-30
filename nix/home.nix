@@ -294,6 +294,35 @@ in
     source = ../scripts/start-desktop;
     executable = true;
   };
+  home.file.".local/bin/dotfiles-brew-update" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      set -euo pipefail
+
+      if [ -x /opt/homebrew/bin/brew ]; then
+        brew=/opt/homebrew/bin/brew
+      elif [ -x /usr/local/bin/brew ]; then
+        brew=/usr/local/bin/brew
+      else
+        echo "Homebrew is not installed." >&2
+        exit 1
+      fi
+
+      export PATH="$(dirname "$brew"):/usr/bin:/bin:/usr/sbin:/sbin"
+      export HOMEBREW_NO_AUTO_UPDATE=1
+      export HOMEBREW_NO_INSTALL_CLEANUP=1
+
+      if [ "''${1:-}" = "--dry-run" ]; then
+        exec "$brew" upgrade --dry-run --no-ask --no-quit
+      fi
+
+      echo "Homebrew update started at $(date)"
+      "$brew" update
+      "$brew" upgrade --no-ask --no-quit
+      echo "Homebrew update finished at $(date)"
+    '';
+  };
   home.file.".local/bin/dotfiles-apply-latest" = {
     executable = true;
     text = ''
@@ -303,5 +332,23 @@ in
       profile="''${1:-personal}"
       darwin-rebuild switch --flake "github:Nu11ified/dotfiles#$profile"
     '';
+  };
+
+  launchd.agents.dotfiles-brew-update = {
+    enable = true;
+    config = {
+      ProgramArguments = [ "${config.home.homeDirectory}/.local/bin/dotfiles-brew-update" ];
+      StartCalendarInterval = [
+        {
+          Hour = 9;
+          Minute = 0;
+        }
+      ];
+      ProcessType = "Background";
+      LowPriorityIO = true;
+      LowPriorityBackgroundIO = true;
+      StandardOutPath = "${config.home.homeDirectory}/Library/Logs/dotfiles-brew-update.log";
+      StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/dotfiles-brew-update.error.log";
+    };
   };
 }
