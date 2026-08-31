@@ -36,15 +36,13 @@
       upgrade = false;
       cleanup = "none";
     };
-    taps = [
-      "manaflow-ai/cmux"
-    ];
     brews = [
       "bitwarden-cli"
       "cloud-sql-proxy"
       "displayplacer"
       "felixkratz/formulae/borders"
       "git"
+      "herdr"
       "postgresql@16"
       "felixkratz/formulae/sketchybar"
       "starship"
@@ -53,7 +51,6 @@
     ];
     casks = [
       "bruno"
-      "manaflow-ai/cmux/cmux"
       "codex"
       (if profile == "personal" then "orbstack" else "docker-desktop")
       "ghostty"
@@ -74,8 +71,6 @@
   system.activationScripts.preActivation.text = ''
     brew="${config.homebrew.prefix}/bin/brew"
     if [ -x "$brew" ]; then
-      /usr/bin/sudo --user=${username} --set-home "$brew" tap manaflow-ai/cmux >/dev/null
-      /usr/bin/sudo --user=${username} --set-home "$brew" trust --tap manaflow-ai/cmux >/dev/null
       /usr/bin/sudo --user=${username} --set-home "$brew" trust --formula felixkratz/formulae/borders >/dev/null
       /usr/bin/sudo --user=${username} --set-home "$brew" trust --formula felixkratz/formulae/sketchybar >/dev/null
       /usr/bin/sudo --user=${username} --set-home "$brew" trust --cask nikitabobko/tap/aerospace >/dev/null
