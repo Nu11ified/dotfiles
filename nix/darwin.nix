@@ -67,6 +67,7 @@
       "slack"
       "tableplus"
       "warp"
+      "wispr-flow"
     ];
   };
 
