@@ -25,6 +25,9 @@ app_icon() {
 }
 
 if [ "${SENDER:-}" = "display_change" ] || [ "${SENDER:-}" = "system_woke" ]; then
+  if [ -x "$HOME/.config/displayplacer/apply-layout" ]; then
+    "$HOME/.config/displayplacer/apply-layout" >/dev/null 2>&1 || true
+  fi
   sleep 0.25
   refresh_apps=1
 fi

@@ -248,6 +248,11 @@ in
       "${config.home.homeDirectory}/dotfiles/config/aerospace/scripts/aerospace-query";
     force = true;
   };
+  home.file.".config/displayplacer/apply-layout" = lib.mkIf (profile == "personal") {
+    source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/dotfiles/config/displayplacer/personal";
+    force = true;
+  };
   home.file.".config/sketchybar/sketchybarrc" = {
     source = ../config/sketchybar/sketchybarrc;
     executable = true;

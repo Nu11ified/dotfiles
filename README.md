@@ -218,6 +218,11 @@ to cycle monitor focus.
 The system disables macOS "Displays have separate Spaces" for AeroSpace
 stability. Log out once after first applying that setting. AeroSpace owns the
 workspace-to-monitor mapping; SketchyBar only reads and displays that state.
+The personal profile also restores the known three-display geometry with
+`displayplacer`. It leaves a free bottom corner on every display, which
+AeroSpace needs to hide inactive workspace windows without exposing clickable
+window edges on an adjacent monitor. The profile only runs when all three known
+display IDs, and no additional displays, are connected.
 
 Click the power button left of the clock in SketchyBar to release or restore
 AeroSpace window management. Workspace buttons dim while AeroSpace is disabled
@@ -236,6 +241,7 @@ windows, and `Option-Shift-h/j/k/l` to reorder them.
 - `config/aerospace/aerospace.toml`: tiling/window/workspace shortcuts.
 - `config/aerospace/scripts/open-app`: launch apps on the current workspace.
 - `config/aerospace/scripts/aerospace-query`: bound status queries so a stopped AeroSpace server cannot freeze SketchyBar.
+- `config/displayplacer/personal`: personal three-display arrangement with free AeroSpace parking corners.
 - `config/sketchybar/sketchybarrc`: dark top bar.
 - `config/sketchybar/plugins/aerospace_workspaces.sh`: workspace status and display placement for SketchyBar.
 - `config/borders/bordersrc`: focused-window borders.

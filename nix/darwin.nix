@@ -42,6 +42,7 @@
     brews = [
       "bitwarden-cli"
       "cloud-sql-proxy"
+      "displayplacer"
       "felixkratz/formulae/borders"
       "git"
       "postgresql@16"
