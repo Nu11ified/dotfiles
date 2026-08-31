@@ -1,0 +1,295 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
+managed_root="${WARP_WORKTREE_ROOT:-$HOME/.warp/worktrees}"
+delay_seconds="${WARP_WORKTREE_CLEANUP_DELAY_SECONDS:-75}"
+log_file="${WARP_WORKTREE_CLEANUP_LOG:-$HOME/Library/Logs/warp-worktree-cleanup.log}"
+queue_dir="${WARP_WORKTREE_CLEANUP_QUEUE:-$HOME/Library/Caches/warp-worktree-cleanup/queue}"
+original_pwd="$PWD"
+dry_run=0
+mode="target"
+target=""
+
+usage() {
+  cat <<'EOF'
+Usage:
+  warp-worktree-cleanup [--dry-run] [PATH]
+  warp-worktree-cleanup [--dry-run] --scan
+  warp-worktree-cleanup [--dry-run] [--delay SECONDS] --after-close PATH
+  warp-worktree-cleanup [--delay SECONDS] --enqueue PATH
+
+Only clean Git worktrees below ~/.warp/worktrees are eligible. Dirty worktrees
+and worktrees still used as a process working directory are always retained.
+EOF
+}
+
+emit() {
+  local message="$1"
+  local timestamped
+
+  timestamped="$(date '+%Y-%m-%d %H:%M:%S') $message"
+  printf '%s\n' "$timestamped"
+  mkdir -p "$(dirname "$log_file")" 2>/dev/null || true
+  printf '%s\n' "$timestamped" >>"$log_file" 2>/dev/null || true
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --after-close)
+      mode="after-close"
+      shift
+      [ "$#" -gt 0 ] || { usage >&2; exit 2; }
+      target="$1"
+      ;;
+    --enqueue)
+      mode="enqueue"
+      shift
+      [ "$#" -gt 0 ] || { usage >&2; exit 2; }
+      target="$1"
+      ;;
+    --drain-queue)
+      mode="drain-queue"
+      ;;
+    --delay)
+      shift
+      [ "$#" -gt 0 ] || { usage >&2; exit 2; }
+      delay_seconds="$1"
+      ;;
+    --dry-run)
+      dry_run=1
+      ;;
+    --scan)
+      mode="scan"
+      ;;
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    --*)
+      printf 'Unknown option: %s\n' "$1" >&2
+      usage >&2
+      exit 2
+      ;;
+    *)
+      if [ -n "$target" ]; then
+        printf 'Only one worktree path may be supplied.\n' >&2
+        exit 2
+      fi
+      target="$1"
+      ;;
+  esac
+  shift
+done
+
+case "$delay_seconds" in
+  ''|*[!0-9]*)
+    printf 'Delay must be a non-negative integer.\n' >&2
+    exit 2
+    ;;
+esac
+
+if [ -d "$managed_root" ]; then
+  managed_root="$(cd "$managed_root" && pwd -P)"
+fi
+if [ -n "$target" ]; then
+  case "$target" in
+    /*) ;;
+    *) target="$original_pwd/$target" ;;
+  esac
+fi
+
+# A cleanup process must not keep the worktree active through its own cwd.
+cd /
+
+has_active_cwd() {
+  local worktree="$1"
+  local line cwd
+
+  while IFS= read -r line; do
+    case "$line" in
+      n*)
+        cwd="${line#n}"
+        case "$cwd" in
+          "$worktree"|"$worktree"/*)
+            return 0
+            ;;
+        esac
+        ;;
+    esac
+  done < <(/usr/sbin/lsof -a -d cwd -Fn 2>/dev/null || true)
+
+  return 1
+}
+
+cleanup_one() {
+  local requested="$1"
+  local worktree status common_dir
+
+  if [ ! -d "$requested" ]; then
+    emit "skip: worktree no longer exists: $requested"
+    return 0
+  fi
+
+  if ! worktree="$(git -C "$requested" rev-parse --show-toplevel 2>/dev/null)"; then
+    emit "skip: not a Git worktree: $requested"
+    return 0
+  fi
+  worktree="$(cd "$worktree" && pwd -P)"
+
+  case "$worktree" in
+    "$managed_root"/*) ;;
+    *)
+      emit "skip: outside Warp's managed worktree directory: $worktree"
+      return 0
+      ;;
+  esac
+
+  if [ ! -f "$worktree/.git" ]; then
+    emit "skip: not a linked Git worktree: $worktree"
+    return 0
+  fi
+
+  if has_active_cwd "$worktree"; then
+    emit "keep: a process is still working in $worktree"
+    return 0
+  fi
+
+  if ! status="$(git -C "$worktree" status --porcelain=v1 --untracked-files=all --ignored=matching 2>/dev/null)"; then
+    emit "keep: Git status failed for $worktree"
+    return 0
+  fi
+  if [ -n "$status" ]; then
+    emit "keep: modified, untracked, or ignored files in $worktree"
+    return 0
+  fi
+
+  if ! common_dir="$(git -C "$worktree" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)"; then
+    emit "keep: cannot locate the shared Git directory for $worktree"
+    return 0
+  fi
+
+  if [ "$dry_run" -eq 1 ]; then
+    emit "dry-run: would remove clean Warp worktree $worktree"
+    return 0
+  fi
+
+  if git --git-dir="$common_dir" worktree remove "$worktree"; then
+    git --git-dir="$common_dir" worktree prune
+    emit "removed clean Warp worktree: $worktree"
+  else
+    emit "keep: git worktree remove failed for $worktree"
+    return 1
+  fi
+}
+
+canonical_managed_worktree() {
+  local requested="$1"
+  local worktree
+
+  worktree="$(git -C "$requested" rev-parse --show-toplevel 2>/dev/null)" || return 1
+  worktree="$(cd "$worktree" && pwd -P)"
+  case "$worktree" in
+    "$managed_root"/*)
+      printf '%s\n' "$worktree"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+enqueue_cleanup() {
+  local requested="$1"
+  local worktree key request temporary due
+
+  if ! worktree="$(canonical_managed_worktree "$requested")"; then
+    emit "skip: cannot queue a non-Warp worktree: $requested"
+    return 0
+  fi
+
+  key="$(printf '%s' "$worktree" | shasum -a 256 | awk '{print $1}')"
+  request="$queue_dir/$key"
+  temporary="$queue_dir/.$key.$$"
+  due=$(($(date +%s) + delay_seconds))
+
+  mkdir -p "$queue_dir"
+  printf '%s\n%s\n' "$due" "$worktree" >"$temporary"
+  mv -f "$temporary" "$request"
+}
+
+drain_queue() {
+  local request due worktree now next_due wait_seconds
+  local -a requests
+
+  mkdir -p "$queue_dir"
+  while true; do
+    shopt -s nullglob
+    requests=("$queue_dir"/*)
+    shopt -u nullglob
+    [ "${#requests[@]}" -gt 0 ] || break
+
+    now="$(date +%s)"
+    next_due=""
+    for request in "${requests[@]}"; do
+      due="$(sed -n '1p' "$request" 2>/dev/null || true)"
+      worktree="$(sed -n '2p' "$request" 2>/dev/null || true)"
+      case "$due" in
+        ''|*[!0-9]*)
+          emit "discard: invalid cleanup request: $request"
+          /bin/unlink "$request" 2>/dev/null || true
+          continue
+          ;;
+      esac
+      if [ -z "$worktree" ]; then
+        emit "discard: cleanup request has no worktree: $request"
+        /bin/unlink "$request" 2>/dev/null || true
+        continue
+      fi
+
+      if [ "$due" -le "$now" ]; then
+        cleanup_one "$worktree" || true
+        /bin/unlink "$request" 2>/dev/null || true
+      elif [ -z "$next_due" ] || [ "$due" -lt "$next_due" ]; then
+        next_due="$due"
+      fi
+    done
+
+    if [ -n "$next_due" ]; then
+      now="$(date +%s)"
+      wait_seconds=$((next_due - now))
+      [ "$wait_seconds" -gt 0 ] && sleep "$wait_seconds"
+    fi
+  done
+}
+
+case "$mode" in
+  after-close)
+    [ -n "$target" ] || { usage >&2; exit 2; }
+    sleep "$delay_seconds"
+    cleanup_one "$target"
+    ;;
+  enqueue)
+    [ -n "$target" ] || { usage >&2; exit 2; }
+    enqueue_cleanup "$target"
+    ;;
+  drain-queue)
+    drain_queue
+    ;;
+  scan)
+    if [ ! -d "$managed_root" ]; then
+      emit "nothing to scan: $managed_root does not exist"
+      exit 0
+    fi
+    while IFS= read -r git_file; do
+      cleanup_one "$(dirname "$git_file")"
+    done < <(find "$managed_root" -type f -name .git -print)
+    ;;
+  target)
+    if [ -z "$target" ]; then
+      target="$original_pwd"
+    fi
+    cleanup_one "$target"
+    ;;
+esac

@@ -158,6 +158,10 @@ in
         source "$ZSH_CUSTOM/aliases.zsh"
       fi
 
+      if [ -r "$ZSH_CUSTOM/warp-worktree-cleanup.zsh" ]; then
+        source "$ZSH_CUSTOM/warp-worktree-cleanup.zsh"
+      fi
+
       if command -v starship >/dev/null 2>&1; then
         eval "$(starship init zsh)"
       fi
@@ -179,6 +183,10 @@ in
       /usr/bin/install -m 600 /dev/null "$secrets_file"
     fi
     /bin/chmod 600 "$secrets_file"
+  '';
+
+  home.activation.ensureWarpWorktreeCleanupQueue = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    /bin/mkdir -p "$HOME/Library/Caches/warp-worktree-cleanup/queue"
   '';
 
   home.activation.installNodeToolchain = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -288,6 +296,10 @@ in
     executable = true;
   };
   home.file.".config/ghostty/config".source = ../config/ghostty/config;
+  home.file.".warp/default_tab_configs/worktree.toml" = {
+    source = ../config/warp/default_tab_configs/worktree.toml;
+    force = true;
+  };
   home.file.".config/keyboard-shortcuts.md".source = ../docs/keyboard-shortcuts.md;
   home.file.".local/bin/dotfiles-install" = {
     source = ../scripts/install;
@@ -299,6 +311,10 @@ in
   };
   home.file.".local/bin/dotfiles-start-desktop" = {
     source = ../scripts/start-desktop;
+    executable = true;
+  };
+  home.file.".local/bin/warp-worktree-cleanup" = {
+    source = ../scripts/warp-worktree-cleanup;
     executable = true;
   };
   home.file.".local/bin/dotfiles-brew-update" = {
@@ -356,6 +372,24 @@ in
       LowPriorityBackgroundIO = true;
       StandardOutPath = "${config.home.homeDirectory}/Library/Logs/dotfiles-brew-update.log";
       StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/dotfiles-brew-update.error.log";
+    };
+  };
+
+  launchd.agents.warp-worktree-cleanup = {
+    enable = true;
+    config = {
+      ProgramArguments = [
+        "${config.home.homeDirectory}/.local/bin/warp-worktree-cleanup"
+        "--drain-queue"
+      ];
+      QueueDirectories = [
+        "${config.home.homeDirectory}/Library/Caches/warp-worktree-cleanup/queue"
+      ];
+      ProcessType = "Background";
+      LowPriorityIO = true;
+      LowPriorityBackgroundIO = true;
+      StandardOutPath = "/dev/null";
+      StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/warp-worktree-cleanup.error.log";
     };
   };
 }

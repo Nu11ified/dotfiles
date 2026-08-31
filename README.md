@@ -177,6 +177,26 @@ branch at another revision, or divergent local commits. They continue applying
 the rest of the dotfiles and print both the local and pinned revisions instead
 of overwriting in-progress work.
 
+## Warp Worktree Cleanup
+
+Warp does not currently expose a tab-close hook. The zsh configuration tracks
+worktrees created below `~/.warp/worktrees` and schedules a cleanup check when
+the shell exits. The check waits 75 seconds so Warp's closed-tab restore window
+has expired. It keeps the worktree if another pane or process is still working
+there, or if Git reports any modified, staged, untracked, or ignored files.
+The launch agent wakes only when a cleanup request is queued; it does not poll.
+
+Cleanup removes the clean worktree directory and its Git worktree registration.
+It does not delete the branch. Preview or run a sweep manually with:
+
+```sh
+warp-worktree-cleanup --dry-run --scan
+warp-worktree-cleanup --scan
+```
+
+Cleanup decisions are logged to
+`~/Library/Logs/warp-worktree-cleanup.log`.
+
 ## Keyboard Guide
 
 Home Manager links the guide to:
