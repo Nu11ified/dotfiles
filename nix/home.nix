@@ -71,6 +71,8 @@ in
   programs.home-manager.enable = true;
 
   home.sessionVariables.PNPM_HOME = "${config.home.homeDirectory}/Library/pnpm";
+  # Goliath: which environment a shell talks to (`yarn env doctor` to check)
+  home.sessionVariables.GOLIATH_ENV = "local";
 
   home.sessionPath = [
     "${config.home.homeDirectory}/Library/pnpm"
