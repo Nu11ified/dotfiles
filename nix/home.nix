@@ -96,16 +96,16 @@ in
     shellAliases = {
       ll = "eza -lah --git";
       cat = "bat";
-      rebuild = "darwin-rebuild switch --flake ~/dotfiles#personal";
-      rebuild-work = "darwin-rebuild switch --flake ~/dotfiles#work";
-      rebuild-remote = "darwin-rebuild switch --flake github:Nu11ified/dotfiles#personal";
-      rebuild-work-remote = "darwin-rebuild switch --flake github:Nu11ified/dotfiles#work";
+      rebuild = "sudo darwin-rebuild switch --flake ~/dotfiles#personal";
+      rebuild-work = "sudo darwin-rebuild switch --flake ~/dotfiles#work";
+      rebuild-remote = "sudo darwin-rebuild switch --flake github:Nu11ified/dotfiles#personal";
+      rebuild-work-remote = "sudo darwin-rebuild switch --flake github:Nu11ified/dotfiles#work";
       dots = "cd ~/dotfiles";
       dotfiles-install = "~/dotfiles/scripts/install";
       dotfiles-update = "~/dotfiles/scripts/update";
       dots-install = "~/dotfiles/scripts/install";
       dots-update = "~/dotfiles/scripts/update";
-      rebuild-current = "darwin-rebuild switch --flake ~/dotfiles#${username}-${profile}";
+      rebuild-current = "sudo darwin-rebuild switch --flake ~/dotfiles#${username}-${profile}";
       flake-show = "nix flake show ~/dotfiles";
       flake-check = "nix flake check ~/dotfiles";
     };
