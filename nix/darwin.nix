@@ -95,7 +95,10 @@
     NSGlobalDomain.KeyRepeat = 2;
     NSGlobalDomain.InitialKeyRepeat = 15;
     spaces.spans-displays = true;
-    universalaccess.reduceTransparency = true;
+    # Needs Full Disk Access for the activating terminal; without it `defaults`
+    # exits non-zero and aborts activation before home-manager ever runs.
+    # The value is already set to 1 on this machine and persists without this line.
+    # universalaccess.reduceTransparency = true;
   };
 
   power.sleep = {
