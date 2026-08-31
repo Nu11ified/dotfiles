@@ -36,6 +36,9 @@
       upgrade = false;
       cleanup = "none";
     };
+    taps = [
+      "rjyo/moshi"
+    ];
     brews = [
       "bitwarden-cli"
       "cloud-sql-proxy"
@@ -43,9 +46,12 @@
       "felixkratz/formulae/borders"
       "git"
       "herdr"
+      "mosh"
       "postgresql@16"
+      "rjyo/moshi/moshi-hook"
       "felixkratz/formulae/sketchybar"
       "starship"
+      "tmux"
       "zsh-autosuggestions"
       "television"
     ];
@@ -71,6 +77,8 @@
   system.activationScripts.preActivation.text = ''
     brew="${config.homebrew.prefix}/bin/brew"
     if [ -x "$brew" ]; then
+      /usr/bin/sudo --user=${username} --set-home "$brew" tap rjyo/moshi >/dev/null
+      /usr/bin/sudo --user=${username} --set-home "$brew" trust --tap rjyo/moshi >/dev/null
       /usr/bin/sudo --user=${username} --set-home "$brew" trust --formula felixkratz/formulae/borders >/dev/null
       /usr/bin/sudo --user=${username} --set-home "$brew" trust --formula felixkratz/formulae/sketchybar >/dev/null
       /usr/bin/sudo --user=${username} --set-home "$brew" trust --cask nikitabobko/tap/aerospace >/dev/null
