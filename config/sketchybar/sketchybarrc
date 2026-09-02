@@ -35,6 +35,21 @@ sketchybar --add event aerospace_focus_change
 sketchybar --add event aerospace_state_change
 sketchybar --remove '/space\..*/'
 
+sketchybar --add item caffeinate.toggle right \
+  --set caffeinate.toggle \
+    width=24 \
+    padding_left=0 \
+    padding_right=0 \
+    icon="" \
+    icon.font="JetBrainsMono Nerd Font:Bold:13.0" \
+    icon.align=center \
+    icon.width=24 \
+    label.drawing=off \
+    click_script="$PLUGIN_DIR/caffeinate_toggle.sh toggle" \
+    script="$PLUGIN_DIR/caffeinate_toggle.sh refresh" \
+    background.drawing=off \
+  --subscribe caffeinate.toggle system_woke
+
 sketchybar --add item aerospace.toggle right \
   --set aerospace.toggle \
     width=24 \
@@ -129,8 +144,10 @@ sketchybar --add item clock right \
     background.color=0x00000000 \
     icon.color=0xffffffff
 
-sketchybar --move aerospace.toggle after clock
+sketchybar --move caffeinate.toggle after clock
+sketchybar --move aerospace.toggle after caffeinate.toggle
 
+"$PLUGIN_DIR/caffeinate_toggle.sh" refresh
 "$PLUGIN_DIR/aerospace_toggle.sh" refresh
 sketchybar --trigger aerospace_workspace_change FULL_REFRESH=1
 sketchybar --update

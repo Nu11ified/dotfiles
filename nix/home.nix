@@ -275,6 +275,13 @@ in
     source = ../config/sketchybar/plugins/aerospace_toggle.sh;
     executable = true;
   };
+  home.file.".config/sketchybar/plugins/caffeinate_toggle.sh" = {
+    source = ../config/sketchybar/plugins/caffeinate_toggle.sh;
+    executable = true;
+  };
+  home.file.".config/sketchybar/caffeinate.plist" = {
+    source = ../config/sketchybar/caffeinate.plist;
+  };
   home.file.".config/sketchybar/plugins/front_app.sh" = {
     source = ../config/sketchybar/plugins/front_app.sh;
     executable = true;

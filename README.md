@@ -248,6 +248,13 @@ Click the power button left of the clock in SketchyBar to release or restore
 AeroSpace window management. Workspace buttons dim while AeroSpace is disabled
 and update immediately when it is enabled again.
 
+Click the coffee button beside the clock to control macOS idle sleep. Green runs
+`caffeinate -di`, keeping the display and Mac awake on battery or AC until the
+button is clicked again. Red allows the normal sleep timers to run. Closing a
+MacBook lid is forced sleep and cannot be blocked by `caffeinate`; closed-lid
+operation still follows Apple's external-display clamshell requirements. Apple
+documents the [forced-sleep limitation](https://developer.apple.com/documentation/iokit/kiopmassertiontypepreventuseridlesystemsleep).
+
 Ghostty windows are tiled. Ghostty tabs remain disabled in `config/ghostty/config`
 because macOS exposes those tabs through accessibility APIs as separate windows.
 Use `Option-Enter` for another tiled Ghostty window, `Option-Tab` to cycle
