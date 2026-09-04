@@ -140,6 +140,32 @@ gcloud version
 cloud-sql-proxy --version
 ```
 
+## Devbox File Transfers
+
+Use `transfer` to copy one local file to a numbered Goliath devbox:
+
+```sh
+transfer 1 ./suggestionarchitecture.txt ~/
+transfer 2 ./build.log /tmp/
+```
+
+The first argument selects `devbox-manas-N`. The function accepts `~/` with or
+without quotes and maps it to the remote home directory.
+
+When a reprovisioned devbox reports a changed host key, remove only that stale
+entry, verify the replacement fingerprint through the GCP console route, then
+retry the transfer:
+
+```sh
+ssh-keygen -R devbox-manas-1
+gcloud compute ssh devbox-manas-1 \
+  --project=staging-472516 \
+  --zone=us-central1-a \
+  --tunnel-through-iap \
+  --command='ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub'
+transfer 1 ./suggestionarchitecture.txt ~/
+```
+
 ## Reloading Apps
 
 `dotfiles-update` reloads AeroSpace and restarts SketchyBar automatically after
