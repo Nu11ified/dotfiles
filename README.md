@@ -237,9 +237,9 @@ Inside Emacs, open it with `C-c ?`.
 
 | Keys | Display |
 | --- | --- |
-| `Option-1..3` | Built-in MacBook display |
-| `Option-4..6` | First external display |
-| `Option-7..9` | Second external display |
+| One display | `1..9` |
+| Two displays | `1..5` / `6..9` |
+| Three displays | `1..3` / `4..6` / `7..9` |
 
 No application is automatically assigned to a workspace. App-launch shortcuts
 open on whichever workspace is currently focused, and
@@ -249,11 +249,12 @@ SketchyBar subscribes to an `aerospace_workspace_change` event triggered by
 AeroSpace's `exec-on-workspace-change` callback, so the top bar shows the active
 AeroSpace workspace instead of relying on macOS Spaces.
 
-Built-in AeroSpace assignments keep workspaces `1..3` on the MacBook display.
-With three displays, `4..6` use the first external display and `7..9` use the
-second external display, ordered from left to right. With one external display,
-both external workspace groups use it. Missing external displays fall back to
-the main display. SketchyBar shows each workspace only on its assigned monitor:
+Displays are sorted by their left edge, then their top edge for vertically
+stacked displays. Workspace groups follow that order, including the laptop.
+Groups are balanced, with earlier displays receiving any extra workspace.
+The assignment script runs on startup, display changes, wake, and full bar
+refreshes. It moves only workspaces whose assigned display differs, without
+polling. SketchyBar shows each workspace only on its assigned monitor:
 white is focused and pink is visible on another monitor.
 Each workspace shows the icon of its most recently focused application; the
 icon does not assign that application to the workspace. Use
@@ -264,11 +265,11 @@ to cycle monitor focus.
 The system disables macOS "Displays have separate Spaces" for AeroSpace
 stability. Log out once after first applying that setting. AeroSpace owns the
 workspace-to-monitor mapping; SketchyBar only reads and displays that state.
-The personal profile also restores the known three-display geometry with
-`displayplacer`. It leaves a free bottom corner on every display, which
-AeroSpace needs to hide inactive workspace windows without exposing clickable
-window edges on an adjacent monitor. The profile only runs when all three known
-display IDs, and no additional displays, are connected.
+No monitor model, UUID, resolution, or desk layout is hard-coded. Display
+geometry is preserved. AeroSpace still requires a clear bottom corner on each
+display to park hidden windows. If window strips appear on a neighbor, stagger
+the display edges in macOS Displays settings; workspace routing cannot remove
+that limitation of AeroSpace's window hiding.
 
 Click the power button left of the clock in SketchyBar to release or restore
 AeroSpace window management. Workspace buttons dim while AeroSpace is disabled

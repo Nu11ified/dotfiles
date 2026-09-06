@@ -24,11 +24,9 @@ app_icon() {
   esac
 }
 
-if [ "${SENDER:-}" = "display_change" ] || [ "${SENDER:-}" = "system_woke" ]; then
-  if [ -x "$HOME/.config/displayplacer/apply-layout" ]; then
-    "$HOME/.config/displayplacer/apply-layout" >/dev/null 2>&1 || true
-  fi
+if [ "${SENDER:-}" = "display_change" ] || [ "${SENDER:-}" = "system_woke" ] || [ "$refresh_apps" = "1" ]; then
   sleep 0.25
+  /bin/bash "$HOME/dotfiles/config/aerospace/scripts/assign-monitors"
   refresh_apps=1
 fi
 

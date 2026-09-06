@@ -20,10 +20,6 @@ defaults write com.apple.universalaccess reduceTransparency -bool true 2>/dev/nu
 killall SystemUIServer 2>/dev/null || true
 killall ControlCenter 2>/dev/null || true
 
-if [ -x "$HOME/.config/displayplacer/apply-layout" ]; then
-  "$HOME/.config/displayplacer/apply-layout" || true
-fi
-
 if command -v aerospace >/dev/null 2>&1; then
   pkill -f '/.config/sketchybar/plugins/aerospace_workspaces.sh' 2>/dev/null || true
   open -gj -a AeroSpace || true
@@ -34,6 +30,7 @@ if command -v aerospace >/dev/null 2>&1; then
     sleep 0.1
   done
   aerospace reload-config
+  /bin/bash "$dotfiles_dir/config/aerospace/scripts/assign-monitors"
 fi
 
 pkill -x spacebar 2>/dev/null || true

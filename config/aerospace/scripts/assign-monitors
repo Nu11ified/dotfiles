@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -euo pipefail
+export PATH="/opt/homebrew/bin:/usr/local/bin:/run/current-system/sw/bin:$PATH"
+
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/aerospace"
+mkdir -p "$state_dir"
+# Workspace moves emit bar events; only one topology update may run at a time.
+exec /usr/bin/perl -MFcntl=:flock -e '
+  open(my $lock, ">", shift @ARGV) or die $!;
+  flock($lock, LOCK_EX) or die $!;
+  system(@ARGV);
+  exit($? >> 8);
+' "$state_dir/monitor-routing.lock" /bin/bash -s <<'ROUTE'
+set -euo pipefail
+query="$HOME/.config/aerospace/scripts/aerospace-query"
+for attempt in 1 2 3 4 5; do
+  monitors="$("$query" list-monitors --format '%{monitor-id}|%{monitor-appkit-nsscreen-screens-id}')"
+  displays="$(sketchybar --query displays)"
+  plan="$(jq -nr --arg monitors "$monitors" --argjson displays "$displays" '
+    ($monitors | split("\n") | map(select(length > 0) | split("|") |
+      {id: (.[0]|tonumber), direct: (.[1]|tonumber)})) as $monitors |
+    [$displays[] as $d | $monitors[] | select(.direct == $d.DirectDisplayID) |
+      . + {x: $d.frame.x, y: $d.frame.y}] | sort_by(.x, .y) |
+    if length == 0 or length != ($monitors|length) then empty else
+      . as $screens | length as $n |
+      [range(0; $n) as $i |
+        (((9 / $n)|floor) + (if $i < (9 % $n) then 1 else 0 end)) as $size |
+        range(0; $size) | $screens[$i].id] |
+      to_entries[] | "\(.key + 1)|\(.value)"
+    end')"
+  [ -n "$plan" ] && break
+  sleep 0.2
+done
+[ -n "$plan" ] || exit 1
+current="$("$query" list-workspaces --all --format '%{workspace}|%{monitor-id}')"
+while IFS='|' read -r workspace monitor; do
+  if ! printf '%s\n' "$current" | grep -Fxq "$workspace|$monitor"; then
+    "$query" move-workspace-to-monitor --workspace "$workspace" "$monitor"
+  fi
+done <<< "$plan"
+exit 0
+ROUTE
