@@ -10,6 +10,22 @@ horizontal_id="1733313D-7A5B-4B1A-A510-DD2A879CBE26"
 vertical_id="DF66F73B-21AC-4535-90F1-84C48D94ED5A"
 screen_state="$(displayplacer list 2>/dev/null || true)"
 
+# At the Samsung/Lenovo desk, aligned bottom edges expose hidden Lenovo
+# windows on the laptop. Top alignment leaves a 98-point clear bottom corner.
+if [ "$(printf '%s\n' "$screen_state" | grep -c '^Persistent screen id:')" -eq 3 ] \
+  && printf '%s\n' "$screen_state" | grep -Fq "Persistent screen id: $macbook_id" \
+  && printf '%s\n' "$screen_state" | grep -Fq 'Persistent screen id: 1218626C-70A7-4A7A-9D0B-5F99A56B95E5' \
+  && printf '%s\n' "$screen_state" | grep -Fq 'Persistent screen id: C121D95F-9011-401D-BA6F-4D53556CC926'; then
+  lenovo_origin="$(printf '%s\n' "$screen_state" | awk '
+    /^Persistent screen id:/ { selected = ($NF == "C121D95F-9011-401D-BA6F-4D53556CC926") }
+    selected && /^Origin:/ { print; exit }
+  ')"
+  if [ "$lenovo_origin" != 'Origin: (-1920,0)' ]; then
+    displayplacer 'id:C121D95F-9011-401D-BA6F-4D53556CC926 res:1920x1080 hz:60 color_depth:8 enabled:true scaling:off origin:(-1920,0) degree:0'
+  fi
+  exit 0
+fi
+
 if [ "$(printf '%s\n' "$screen_state" | grep -c '^Persistent screen id:')" -ne 3 ]; then
   exit 0
 fi
