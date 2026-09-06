@@ -237,9 +237,9 @@ Inside Emacs, open it with `C-c ?`.
 
 | Keys | Display |
 | --- | --- |
-| `Option-1..5` | Main display |
-| `Option-6..7` | First connected external display |
-| `Option-8..9` | Second connected external display |
+| `Option-1..3` | Built-in MacBook display |
+| `Option-4..6` | First external display |
+| `Option-7..9` | Second external display |
 
 No application is automatically assigned to a workspace. App-launch shortcuts
 open on whichever workspace is currently focused, and
@@ -249,12 +249,12 @@ SketchyBar subscribes to an `aerospace_workspace_change` event triggered by
 AeroSpace's `exec-on-workspace-change` callback, so the top bar shows the active
 AeroSpace workspace instead of relying on macOS Spaces.
 
-Built-in AeroSpace assignments keep workspaces `1..5` on the main display. With
-two displays, workspaces `6..9` use the external display. With three displays,
-`6..7` use the leftmost display and `8..9` use the rightmost display; the main
-display should sit between them in macOS display arrangement. Missing external
-displays fall back to the main display. SketchyBar shows each workspace only on
-its assigned monitor: white is focused and pink is visible on another monitor.
+Built-in AeroSpace assignments keep workspaces `1..3` on the MacBook display.
+With three displays, `4..6` use the first external display and `7..9` use the
+second external display, ordered from left to right. With one external display,
+both external workspace groups use it. Missing external displays fall back to
+the main display. SketchyBar shows each workspace only on its assigned monitor:
+white is focused and pink is visible on another monitor.
 Each workspace shows the icon of its most recently focused application; the
 icon does not assign that application to the workspace. Use
 `Option-Control-Arrow` to focus a monitor,
