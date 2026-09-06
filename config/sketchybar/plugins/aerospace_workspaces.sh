@@ -24,9 +24,9 @@ app_icon() {
   esac
 }
 
-if [ "${SENDER:-}" = "display_change" ] || [ "${SENDER:-}" = "system_woke" ] || [ "$refresh_apps" = "1" ]; then
+if [ "${SENDER:-}" = "display_change" ] || [ "${SENDER:-}" = "system_woke" ] || [ "${SENDER:-}" = "routine" ] || [ "$refresh_apps" = "1" ]; then
   sleep 0.25
-  /bin/bash "$HOME/dotfiles/config/aerospace/scripts/assign-monitors"
+  /bin/bash "$HOME/dotfiles/config/aerospace/scripts/assign-monitors" || true
   refresh_apps=1
 fi
 

@@ -254,7 +254,9 @@ stacked displays. Workspace groups follow that order, including the laptop.
 Groups are balanced, with earlier displays receiving any extra workspace.
 The assignment script runs on startup, display changes, wake, and full bar
 refreshes. It moves only workspaces whose assigned display differs, without
-polling. SketchyBar shows each workspace only on its assigned monitor:
+continuous window polling. A 15-second recovery check also reconciles assignments
+after missed KVM reconnect events; unchanged assignments cause no window moves.
+SketchyBar shows each workspace only on its assigned monitor:
 white is focused and pink is visible on another monitor.
 Each workspace shows the icon of its most recently focused application; the
 icon does not assign that application to the workspace. Use

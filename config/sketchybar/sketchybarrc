@@ -101,6 +101,7 @@ sketchybar --add item aerospace.workspaces left \
   --set aerospace.workspaces \
     drawing=off \
     updates=on \
+    update_freq=15 \
     script="$PLUGIN_DIR/aerospace_workspaces.sh" \
   --subscribe aerospace.workspaces aerospace_workspace_change aerospace_focus_change aerospace_state_change display_change system_woke
 
