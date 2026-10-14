@@ -53,17 +53,12 @@ if [ "${SENDER:-}" = "aerospace_focus_change" ]; then
       if [ -n "$focused_app" ]; then
         mkdir -p "$workspace_state_dir"
         printf '%s\n' "$focused_app" > "$workspace_state_dir/$focused_workspace"
-        sketchybar --set "space.$focused_workspace" \
+        args+=(--set "space.$focused_workspace" \
           label="$(app_icon "$focused_app")" \
-          label.drawing=on \
-          background.color=0xffffffff \
-          background.border_color=0xffffffff \
-          icon.color=0xff111111 \
-          label.color=0xff111111
+          label.drawing=on)
       fi
       ;;
   esac
-  exit 0
 fi
 
 workspace_state="$(
@@ -71,6 +66,12 @@ workspace_state="$(
     --format '%{workspace}|%{workspace-is-focused}|%{workspace-is-visible}|%{monitor-appkit-nsscreen-screens-id}' \
     2>/dev/null || true
 )"
+
+if [ -z "$workspace_state" ]; then
+  sketchybar --set aerospace.toggle icon.color=0xfff9e2af
+  exit 1
+fi
+args+=(--set aerospace.toggle icon.color=0xffa6e3a1)
 
 # AeroSpace reports the macOS DirectDisplayID, while SketchyBar's display=
 # setting expects its arrangement-id. They are not guaranteed to have the

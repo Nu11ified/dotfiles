@@ -259,12 +259,14 @@ in
     force = true;
   };
   home.file.".config/sketchybar/sketchybarrc" = {
-    source = ../config/sketchybar/sketchybarrc;
-    executable = true;
+    source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/dotfiles/config/sketchybar/sketchybarrc";
+    force = true;
   };
   home.file.".config/sketchybar/plugins/aerospace_workspaces.sh" = {
-    source = ../config/sketchybar/plugins/aerospace_workspaces.sh;
-    executable = true;
+    source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/dotfiles/config/sketchybar/plugins/aerospace_workspaces.sh";
+    force = true;
   };
   home.file.".config/sketchybar/plugins/aerospace_toggle.sh" = {
     source = ../config/sketchybar/plugins/aerospace_toggle.sh;

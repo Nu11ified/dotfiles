@@ -256,6 +256,12 @@ The assignment script runs on startup, display changes, wake, and full bar
 refreshes. It moves only workspaces whose assigned display differs, without
 continuous window polling. A 15-second recovery check also reconciles assignments
 after missed KVM reconnect events; unchanged assignments cause no window moves.
+If AeroSpace has crashed, the same check relaunches it at most once a minute,
+unless tiling was turned off. Display routing waits for two matching topology
+samples before moving workspaces and restores the previously focused workspace.
+Numbered overflow workspaces above 9 created during reconnects have their windows
+collected into the first configured workspace on the same display.
+The bar config links to this checkout so a reload cannot use an older timer setting.
 SketchyBar shows each workspace only on its assigned monitor:
 white is focused and pink is visible on another monitor.
 Each workspace shows the icon of its most recently focused application; the
