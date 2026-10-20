@@ -261,6 +261,10 @@ unless tiling was turned off. Display routing waits for two matching topology
 samples before moving workspaces and restores the previously focused workspace.
 Numbered overflow workspaces above 9 created during reconnects have their windows
 collected into the first configured workspace on the same display.
+When a workspace changes screen or the screen dimensions change, its root layout
+adapts to the screen: portrait uses top-and-bottom tiles; landscape uses
+side-by-side tiles. The initial recovery pass also adapts existing workspaces.
+Subsequent checks preserve manual layout and size changes until the screen changes.
 The bar config links to this checkout so a reload cannot use an older timer setting.
 SketchyBar shows each workspace only on its assigned monitor:
 white is focused and pink is visible on another monitor.

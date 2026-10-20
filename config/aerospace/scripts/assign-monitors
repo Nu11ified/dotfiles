@@ -13,6 +13,8 @@ exec /usr/bin/perl -MFcntl=:flock -e '
 ' "$state_dir/monitor-routing.lock" /bin/bash -s <<'ROUTE'
 set -euo pipefail
 query="$HOME/.config/aerospace/scripts/aerospace-query"
+routing_dir="${XDG_STATE_HOME:-$HOME/.local/state}/aerospace/orientation"
+mkdir -p "$routing_dir"
 if [ -r "${XDG_STATE_HOME:-$HOME/.local/state}/aerospace/enabled" ] &&
    [ "$(cat "${XDG_STATE_HOME:-$HOME/.local/state}/aerospace/enabled")" = off ]; then
   exit 0
@@ -59,13 +61,15 @@ for attempt in 1 2 3 4 5; do
     ($monitors | split("\n") | map(select(length > 0) | split("|") |
       {id: (.[0]|tonumber), direct: (.[1]|tonumber)})) as $monitors |
     [$displays[] as $d | $monitors[] | select(.direct == $d.DirectDisplayID) |
-      . + {x: $d.frame.x, y: $d.frame.y}] | sort_by(.x, .y) |
+      . + {x: $d.frame.x, y: $d.frame.y,
+        layout: (if $d.frame.h > $d.frame.w then "v_tiles" else "h_tiles" end),
+        signature: "\($d.DirectDisplayID):\($d.frame.w):\($d.frame.h)"}] | sort_by(.x, .y) |
     if length == 0 or length != ($monitors|length) or length != ($displays|length) then empty else
       . as $screens | length as $n |
       [range(0; $n) as $i |
         (((9 / $n)|floor) + (if $i < (9 % $n) then 1 else 0 end)) as $size |
-        range(0; $size) | $screens[$i].id] |
-      to_entries[] | "\(.key + 1)|\(.value)"
+        range(0; $size) | $screens[$i]] |
+      to_entries[] | "\(.key + 1)|\(.value.id)|\(.value.layout)|\(.value.signature)"
     end')"
   [ -n "$plan" ] && break
   sleep 0.2
@@ -74,7 +78,7 @@ done
 current="$("$query" list-workspaces --all --format '%{workspace}|%{monitor-id}')"
 focused_workspace="$("$query" list-workspaces --focused)"
 moved=0
-while IFS='|' read -r workspace monitor; do
+while IFS='|' read -r workspace monitor orientation signature; do
   if ! printf '%s\n' "$current" | grep -Fxq "$workspace|$monitor"; then
     "$query" move-workspace-to-monitor --workspace "$workspace" "$monitor"
     moved=1
@@ -98,6 +102,20 @@ while IFS='|' read -r workspace monitor; do
     focused_workspace="$target"
   fi
 done <<< "$current"
+# Adapt once per screen change. Repeated health checks must not undo a manual
+# layout choice or resize on an unchanged display.
+while IFS='|' read -r workspace monitor orientation signature; do
+  previous_signature=""
+  if [ -r "$routing_dir/$workspace" ]; then
+    read -r previous_signature < "$routing_dir/$workspace" || true
+  fi
+  if [ "$previous_signature" != "$signature" ]; then
+    "$query" layout --workspace "$workspace" --root "$orientation"
+    "$query" balance-sizes --workspace "$workspace"
+    printf '%s\n' "$signature" > "$routing_dir/$workspace.tmp"
+    mv "$routing_dir/$workspace.tmp" "$routing_dir/$workspace"
+  fi
+done <<< "$plan"
 if [ "$moved" -eq 1 ]; then
   "$query" workspace "$focused_workspace"
 fi
