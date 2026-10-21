@@ -22,14 +22,14 @@
 | `Option-0` | Rebalance all tiled windows |
 | `Option-Shift-0` | Reset and rebalance the workspace layout |
 | `Option-/` | Toggle horizontal/vertical tiles |
-| `Option-,` | Toggle accordion layout |
+| `Option-,` | Switch to tiles, then toggle horizontal/vertical |
 | `Option-\\` | Toggle tile orientation |
-| `Option-Shift-v` | Toggle accordion/tiles |
+| `Option-Shift-v` | Switch to tiles, then toggle vertical/horizontal |
 | `Option-Control-h/j/k/l` | Join focused window with neighbor |
 | `Option-Control-Arrow` | Focus the monitor in that direction |
 | `Option-Control-Shift-Arrow` | Move the focused window to that monitor |
 | `Option-Control-Tab` | Focus the next monitor |
-| `Option-s` | Vertical accordion layout |
+| `Option-s` | Vertical tiles (top and bottom) |
 | `Option-f` | Fullscreen focused window |
 | `Option-Shift-Space` | Toggle floating/tiling |
 | `Option-q` | Close focused window |

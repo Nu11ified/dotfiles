@@ -265,6 +265,9 @@ When a workspace changes screen or the screen dimensions change, its root layout
 adapts to the screen: portrait uses top-and-bottom tiles; landscape uses
 side-by-side tiles. The initial recovery pass also adapts existing workspaces.
 Subsequent checks preserve manual layout and size changes until the screen changes.
+Accordion root layouts are repaired to screen-oriented tiles on every recovery
+pass, even on an unchanged screen. The layout shortcuts select tiles rather than
+overlapping accordion layouts.
 The bar config links to this checkout so a reload cannot use an older timer setting.
 SketchyBar shows each workspace only on its assigned monitor:
 white is focused and pink is visible on another monitor.

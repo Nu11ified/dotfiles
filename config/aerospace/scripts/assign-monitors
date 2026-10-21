@@ -102,14 +102,16 @@ while IFS='|' read -r workspace monitor; do
     focused_workspace="$target"
   fi
 done <<< "$current"
-# Adapt once per screen change. Repeated health checks must not undo a manual
-# layout choice or resize on an unchanged display.
+# Preserve manual tiled orientations, but repair overlapping accordion layouts
+# even when the screen has not changed.
+root_layouts="$("$query" list-workspaces --all --format '%{workspace}|%{workspace-root-container-layout}')"
 while IFS='|' read -r workspace monitor orientation signature; do
   previous_signature=""
   if [ -r "$routing_dir/$workspace" ]; then
     read -r previous_signature < "$routing_dir/$workspace" || true
   fi
-  if [ "$previous_signature" != "$signature" ]; then
+  root_layout="$(printf '%s\n' "$root_layouts" | awk -F '|' -v workspace="$workspace" '$1 == workspace {print $2; exit}')"
+  if [ "$previous_signature" != "$signature" ] || [[ "$root_layout" = *_accordion ]]; then
     "$query" layout --workspace "$workspace" --root "$orientation"
     "$query" balance-sizes --workspace "$workspace"
     printf '%s\n' "$signature" > "$routing_dir/$workspace.tmp"
