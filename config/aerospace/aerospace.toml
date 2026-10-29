@@ -118,7 +118,8 @@ alt-0 = "balance-sizes"
 alt-shift-0 = ["flatten-workspace-tree", "balance-sizes"]
 
 alt-f = "fullscreen"
-alt-s = "layout tiles vertical"
+alt-s = "layout --root v_tiles"
+alt-shift-s = "layout --root h_tiles"
 alt-shift-space = "layout floating tiling"
 alt-shift-r = "reload-config"
 alt-r = "mode resize"

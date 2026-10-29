@@ -8,9 +8,7 @@
 | `Option-Shift-h/j/k/l` | Swap focused window left/down/up/right |
 | `Option-Tab` / `Option-Shift-Tab` | Cycle through windows forward/backward |
 | `Option-Space` | Toggle the two most recently focused windows/workspaces |
-| `Option-1..5` | Switch to a workspace on the main display |
-| `Option-6..7` | Switch to a workspace on the first external display |
-| `Option-8..9` | Switch to a workspace on the second external display |
+| `Option-1..9` | Switch workspace; windows keep their workspace when monitors disconnect |
 | `Option-Shift-1..9` | Move window to matching workspace |
 | `Option-b` | Open a new Zen window on the current workspace |
 | `Option-Enter` | Open a new Ghostty window on the current workspace |
@@ -29,7 +27,8 @@
 | `Option-Control-Arrow` | Focus the monitor in that direction |
 | `Option-Control-Shift-Arrow` | Move the focused window to that monitor |
 | `Option-Control-Tab` | Focus the next monitor |
-| `Option-s` | Vertical tiles (top and bottom) |
+| `Option-s` | Arrange workspace top and bottom |
+| `Option-Shift-s` | Arrange workspace side by side |
 | `Option-f` | Fullscreen focused window |
 | `Option-Shift-Space` | Toggle floating/tiling |
 | `Option-q` | Close focused window |

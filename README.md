@@ -259,8 +259,10 @@ after missed KVM reconnect events; unchanged assignments cause no window moves.
 If AeroSpace has crashed, the same check relaunches it at most once a minute,
 unless tiling was turned off. Display routing waits for two matching topology
 samples before moving workspaces and restores the previously focused workspace.
-Numbered overflow workspaces above 9 created during reconnects have their windows
-collected into the first configured workspace on the same display.
+Disconnecting a display redistributes whole workspaces, preserving each window's
+workspace number. On the laptop alone all nine workspaces remain separate; on
+reconnect they spread across the displays again. Recovery never merges windows
+from another workspace, including workspaces above 9.
 When a workspace changes screen or the screen dimensions change, its root layout
 adapts to the screen: portrait uses top-and-bottom tiles; landscape uses
 side-by-side tiles. The initial recovery pass also adapts existing workspaces.

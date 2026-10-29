@@ -12,7 +12,8 @@ exec /usr/bin/perl -MFcntl=:flock -e '
   exit($? >> 8);
 ' "$state_dir/monitor-routing.lock" /bin/bash -s <<'ROUTE'
 set -euo pipefail
-query="$HOME/.config/aerospace/scripts/aerospace-query"
+query="${AEROSPACE_QUERY_BIN:-$HOME/.config/aerospace/scripts/aerospace-query}"
+bar="${SKETCHYBAR_BIN:-sketchybar}"
 routing_dir="${XDG_STATE_HOME:-$HOME/.local/state}/aerospace/orientation"
 mkdir -p "$routing_dir"
 if [ -r "${XDG_STATE_HOME:-$HOME/.local/state}/aerospace/enabled" ] &&
@@ -46,7 +47,7 @@ plan=""
 previous_topology=""
 for attempt in 1 2 3 4 5; do
   monitors="$("$query" list-monitors --format '%{monitor-id}|%{monitor-appkit-nsscreen-screens-id}' 2>/dev/null || true)"
-  displays="$(sketchybar --query displays 2>/dev/null || true)"
+  displays="$("$bar" --query displays 2>/dev/null || true)"
   if [ -z "$monitors" ] || ! printf '%s\n' "$displays" | jq -e 'type == "array" and length > 0' >/dev/null 2>&1; then
     sleep 0.2
     continue
@@ -63,7 +64,7 @@ for attempt in 1 2 3 4 5; do
     [$displays[] as $d | $monitors[] | select(.direct == $d.DirectDisplayID) |
       . + {x: $d.frame.x, y: $d.frame.y,
         layout: (if $d.frame.h > $d.frame.w then "v_tiles" else "h_tiles" end),
-        signature: "\($d.DirectDisplayID):\($d.frame.w):\($d.frame.h)"}] | sort_by(.x, .y) |
+        signature: "\($d.UUID):\($d.frame.w):\($d.frame.h)"}] | sort_by(.x, .y) |
     if length == 0 or length != ($monitors|length) or length != ($displays|length) then empty else
       . as $screens | length as $n |
       [range(0; $n) as $i |
@@ -84,24 +85,8 @@ while IFS='|' read -r workspace monitor orientation signature; do
     moved=1
   fi
 done <<< "$plan"
-# AeroSpace creates numbered overflow workspaces while displays reconnect.
-# Keep their windows reachable through the configured 1..9 shortcuts.
-while IFS='|' read -r workspace monitor; do
-  case "$workspace" in ''|*[!0-9]*) continue ;; esac
-  [ "${#workspace}" -lt 6 ] || continue
-  [ "$workspace" -gt 9 ] || continue
-  target="$(printf '%s\n' "$plan" | awk -F '|' -v monitor="$monitor" '$2 == monitor {print $1; exit}')"
-  [ -n "$target" ] || continue
-  windows="$("$query" list-windows --workspace "$workspace" --format '%{window-id}')"
-  while IFS= read -r window; do
-    [ -n "$window" ] || continue
-    "$query" move-node-to-workspace --window-id "$window" "$target"
-    moved=1
-  done <<< "$windows"
-  if [ "$focused_workspace" = "$workspace" ]; then
-    focused_workspace="$target"
-  fi
-done <<< "$current"
+# Move whole workspaces only. Never merge windows from another workspace;
+# disconnecting a display must not change any window's workspace membership.
 # Preserve manual tiled orientations, but repair overlapping accordion layouts
 # even when the screen has not changed.
 root_layouts="$("$query" list-workspaces --all --format '%{workspace}|%{workspace-root-container-layout}')"
