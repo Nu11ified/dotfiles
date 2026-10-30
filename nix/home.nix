@@ -269,8 +269,9 @@ in
     force = true;
   };
   home.file.".config/sketchybar/plugins/aerospace_toggle.sh" = {
-    source = ../config/sketchybar/plugins/aerospace_toggle.sh;
-    executable = true;
+    source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/dotfiles/config/sketchybar/plugins/aerospace_toggle.sh";
+    force = true;
   };
   home.file.".config/sketchybar/plugins/caffeinate_toggle.sh" = {
     source = ../config/sketchybar/plugins/caffeinate_toggle.sh;

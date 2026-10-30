@@ -21,13 +21,18 @@ write_state() {
 
 case "$action" in
   toggle)
-    if "$aerospace_query" enable off --fail-if-noop >/dev/null 2>&1; then
+    previous_state="$(read_state)"
+    if [ "$previous_state" = "on" ]; then
       state="off"
     else
-      "$aerospace_query" enable on >/dev/null
       state="on"
     fi
+    # Persist intent before changing the engine so recovery cannot race Off.
     write_state "$state"
+    if ! "$aerospace_query" enable "$state" >/dev/null; then
+      write_state "$previous_state"
+      exit 1
+    fi
     ;;
   on)
     "$aerospace_query" enable on >/dev/null 2>&1 || true

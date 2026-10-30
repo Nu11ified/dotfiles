@@ -20,6 +20,9 @@ if [ -r "${XDG_STATE_HOME:-$HOME/.local/state}/aerospace/enabled" ] &&
    [ "$(cat "${XDG_STATE_HOME:-$HOME/.local/state}/aerospace/enabled")" = off ]; then
   exit 0
 fi
+# Disabled AeroSpace rejects status queries too. Reconcile intent before the
+# liveness probe, otherwise a disabled engine is mistaken for an unready one.
+"$query" enable on >/dev/null 2>&1 || true
 # A crash leaves the bar alive. Relaunch at most once a minute, and respect
 # the user's off switch. A live but unresponsive process is never killed here.
 if ! "$query" list-monitors >/dev/null 2>&1; then

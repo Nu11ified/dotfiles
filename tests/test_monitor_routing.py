@@ -17,6 +17,9 @@ def fake_transport():
     args = sys.argv[1:]
     state["calls"].append(args)
     command = args[0]
+    if command not in ("enable", "--query") and not state["server_enabled"]:
+        path.write_text(json.dumps(state))
+        sys.exit(2)
     if command == "--query":
         print(json.dumps(state["displays"]))
     elif command == "list-monitors":
@@ -36,6 +39,8 @@ def fake_transport():
         state["workspaces"][args[2]]["layout"] = args[-1]
     elif command == "balance-sizes":
         pass
+    elif command == "enable":
+        state["server_enabled"] = args[1] == "on"
     elif command == "workspace":
         state["focused"] = args[1]
     elif command == "list-windows":
@@ -69,7 +74,7 @@ class MonitorRoutingTest(unittest.TestCase):
                                 SKETCHYBAR_BIN=str(self.transport))
         self.script = Path(__file__).resolve().parents[1] / "config/aerospace/scripts/assign-monitors"
         self.windows = {str(100 + number): str(number) for number in range(1, 12)}
-        self.state = dict(calls=[], focused="5", windows=self.windows.copy(), displays=[],
+        self.state = dict(calls=[], focused="5", windows=self.windows.copy(), displays=[], server_enabled=True,
                           workspaces={str(n): dict(monitor=1, layout="h_tiles")
                                       for n in range(1, 12)})
 
@@ -125,8 +130,15 @@ class MonitorRoutingTest(unittest.TestCase):
         enabled = self.directory / "runtime/aerospace/enabled"
         enabled.parent.mkdir(parents=True)
         enabled.write_text("off\n")
+        self.state["server_enabled"] = False
         self.run_routing([display(1, 1, "laptop", 0, 0, 1512, 982)])
         self.assertEqual(self.state["calls"], [])
+        self.assertFalse(self.state["server_enabled"])
+
+    def test_running_but_disabled_server_is_reenabled(self):
+        self.state["server_enabled"] = False
+        self.run_routing([display(1, 1, "laptop", 0, 0, 1512, 982)])
+        self.assertTrue(self.state["server_enabled"])
 
 
 if __name__ == "__main__":

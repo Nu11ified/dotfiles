@@ -259,6 +259,8 @@ after missed KVM reconnect events; unchanged assignments cause no window moves.
 If AeroSpace has crashed, the same check relaunches it at most once a minute,
 unless tiling was turned off. Display routing waits for two matching topology
 samples before moving workspaces and restores the previously focused workspace.
+While the bar switch is on, recovery also re-enables a running AeroSpace engine
+that has stopped managing windows. The bar's Off switch remains authoritative.
 Disconnecting a display redistributes whole workspaces, preserving each window's
 workspace number. On the laptop alone all nine workspaces remain separate; on
 reconnect they spread across the displays again. Recovery never merges windows
